@@ -1,0 +1,97 @@
+.form-container {
+    width: 80%;
+    margin: auto;
+    margin-top: 60px;
+}
+
+.login-signup-form {
+    padding: 40px 70px 40px 70px;
+    background-color: #ced7d8;
+
+}
+
+.form-image {
+    background-image: url("../images/hospital_image.jpg");
+    opacity: 0.9;
+    background-position: center;
+    background-size: cover;
+}
+
+
+.userDashNav {
+    width: auto;
+    background-color: white;
+    border-radius: 20px;
+    height: 100vh;
+    padding: 20px;
+    position: relative;
+}
+
+#user-dash-body {
+    background-color: #EAECF4;
+}
+
+.userDash {
+    padding: 40px;
+}
+
+#user-dash-hospital-logo {
+    font-weight: bold;
+    font-size: 24px;
+    text-decoration: none;
+    color: #0AB8B7;
+    text-align: center;
+}
+
+.user-profile {
+    text-align: center;
+}
+
+#user-profile-pic-container {
+    width: 100%;
+    margin: auto;
+}
+
+.user-profile-pic {
+    width: 80px;
+    height: 80px;
+    border-radius: 50%;
+    object-fit: cover;
+}
+
+.user-dash-nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+}
+
+#user-dash-nav-active {
+    color: #0AB8B7;
+}
+
+.user-dash-nav a {
+    text-decoration: none;
+    color: black;
+
+}
+
+.user-dash-nav a:hover {
+    color: #0AB8B7;
+
+}
+
+.user-accounts-setting {
+    position: absolute;
+    bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    left: 0;
+    right: 0;
+    text-align: center;
+}
+
+.user-accounts-setting a{
+    color: black;
+    text-decoration: none;
+}
