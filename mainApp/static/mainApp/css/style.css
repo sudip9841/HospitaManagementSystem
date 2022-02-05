@@ -18,3 +18,7 @@
     color: #0AB8B7;
 }
 
+.view-book-container{
+    display: flex;
+    justify-content: space-between;
+}

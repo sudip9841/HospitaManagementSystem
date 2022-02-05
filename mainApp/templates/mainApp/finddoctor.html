@@ -1,0 +1,30 @@
+{% extends 'mainApp/base.html' %}
+{% load static %}
+
+{% block title%} Find Doctor {% endblock title %}
+
+
+{% block mainContent %}
+    <div class="container">
+        {% if doctors %}
+        <div class="row justify-content-center">
+            {% for doctor in doctors %}
+
+            <div class="card col-xl-4 col-lg-3 col-md-2 col-1 gy-5" style="width: 18rem;">
+                <img src="/media/{{doctor.profile_pic}}" class="card-img-top" alt="doctor image">
+                <div class="card-body">
+                  <h5 style="text-align: center;">{{doctor.fullName|slice:":15"}}...</h5>
+                    <p>{{doctor.department}}</p>
+                  <div class="view-book-container">
+                    <a href="#"><button class="btn" style="background-color: #B7274C;"> <span style="font-size: 12px; color: white;">View Profile</span> </button></a>
+                    <a href="#"><button class="btn btn-primary" style="background-color: #164A96;;"><span style="font-size: 12px; color: white;">Book Appointment</span></button></a>
+                  </div>
+                </div>
+              </div>
+            {% endfor %}
+
+        </div>
+            
+        {% endif %}
+    </div>
+{% endblock mainContent %}

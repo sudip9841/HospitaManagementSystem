@@ -21,70 +21,89 @@
 <body id="user-dash-body">
   {% if request.user.is_authenticated %}
 
-<div style="margin: 0; padding: 0;" class="container">
-  <div class="row">
+    <div class="user-navigation-dashboard">
 
-    <div style="width: fit-content;" class="col-2">
+      <div class="user-navigation">
 
-      <div class="userDashNav">
-        <a style="text-decoration: none;" href="{% url 'home'%}">
-          <h5 id="user-dash-hospital-logo">Nepal Hospital</h5>
-        </a>
-        <hr class="divider">
-        <div class="user-profile">
-          <div id="user-profile-pic-container">
-            <!-- if thre the user has uploaded profile picture then it will show the particular picture -->
-            {% if prof.profile_pic %}
-            <img class="user-profile-pic" src="/media/{{prof.profile_pic}}" alt="profile">
-            {% else %}
-            <!-- else it will show the difault picture -->
-            <img class="user-profile-pic" src="{% static 'userAuth/images/nopic.png'%}" alt="">
-            {% endif %}
+        <div class="userDashNav">
+
+          <div class="user-profile">
+            <div id="user-profile-pic-container">
+              <!-- if thre the user has uploaded profile picture then it will show the particular picture -->
+              {% if p_prof.profile_pic %}
+              <img class="user-profile-pic" src="/media/{{p_prof.profile_pic}}" alt="profile">
+              {% elif d_prof.profile_pic %}
+              <img class="user-profile-pic" src="/media/{{d_prof.profile_pic}}" alt="profile">
+              {% elif s_prof.profile_pic %}
+              <img class="user-profile-pic" src="/media/{{s_prof.profile_pic}}" alt="profile">
+              {% else %}
+              <!-- else it will show the difault picture -->
+              <img class="user-profile-pic" src="{% static 'userAuth/images/nopic.png'%}" alt="">
+              {% endif %}
+            </div>
+            <p style="font-size: 16px;">{{request.user.username}}</p>
           </div>
-          <p style="font-size: 16px;">{{request.user.username}}</p>
-        </div>
-        <hr class="divider">
-        <div class="user-dash-nav">
-          {% if request.user|has_group:"patient" %} 
-          <ul>
-            <!-- id="user-dash-nav-active" -->
-            <li><a href="{% url 'userDashHome' %}">Dashboard</a></li>
-            <li><a href="#">Appointments</a></li>
-            <li><a href="#">Test results</a></li>
-            <li><a href="#">Prescription</a></li>
-          </ul>
-          {% elif request.user|has_group:"doctor" %}
+
+          <hr class="divider">
+
+          <div class="user-nav-setting">
+
+      
+          <div class="user-dash-nav">
+            {% if request.user|has_group:"patient" %}
+            <ul>
+              <!-- id="user-dash-nav-active" -->
+              <li><a href="{% url 'userDashHome' %}">Dashboard</a></li>
+              <li><a href="#">Appointments</a></li>
+              <li><a href="#">Test results</a></li>
+              <li><a href="#">Prescription</a></li>
+            </ul>
+            {% elif request.user|has_group:"doctor" %}
             <ul>
               <!-- id="user-dash-nav-active" -->
               <li><a href="{% url 'userDashHome' %}">Dashboard</a></li>
               <li><a href="#">Appointments</a></li>
               <li><a href="#">My patients</a></li>
             </ul>
-          {% endif %}
+            {% elif request.user|has_group:"staff" %}
+            <ul>
+              <!-- id="user-dash-nav-active" -->
+              <li><a href="{% url 'userDashHome' %}">Add patient</a></li>
+              <li><a href="#">Schedule appointments</a></li>
+            </ul>
+            {% endif %}
+          </div>
+
+          <div class="user-accounts-setting">
+            <hr class="divider">
+            <a href="{% url 'editprofile' %}">Edit Profile</a><br>
+            <a href="{% url 'changepassword' %}">Change Password</a><br>
+            <a href="{% url 'logout' %}">Logout</a>
+          </div>
         </div>
 
-        <div class="user-accounts-setting">
-         <hr class="divider">
-          <a href="{% url 'editprofile' %}">Edit Profile</a><br>
-          <a href="{% url 'changepassword' %}">Change Password</a><br>
-          <a href="{% url 'logout' %}">Logout</a>
+        </div>
+
+
+      </div>
+
+
+      <div style="height: 100vh; overflow: auto;" class="user-dashboard">
+
+        <div class="userDash">
+          <a style="text-decoration: none;" href="{% url 'home'%}">
+            <h2 id="user-dash-hospital-logo">Nepal Hospital</h2>
+          </a>
+
+          {% block userDashContent %}
+
+          {% endblock userDashContent %}
+
         </div>
       </div>
     </div>
-
-
-    <div class="col-4 col-sm-6 col-md-8">
-
-      <div class="userDash">
-        {% block userDashContent %}
-
-        {% endblock userDashContent %}
-
-      </div>
-    </div>
-  </div>
-  </div>
   
+
   {% endif %}
 
 

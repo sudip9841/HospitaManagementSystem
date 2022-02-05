@@ -1,12 +1,12 @@
-import imp
 from django import forms
 from django.contrib.auth.models import User
-from userAuth.models import PersonalDetails
+from userAuth.models import PatientDetails, DoctorDetails, StaffDetails
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UsernameField, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib.auth import password_validation
 
 
+#form for user registration
 class UserRegistrationForm(UserCreationForm):
     username = forms.CharField(label="Username", widget=forms.TextInput(attrs={'class':'form-control'}))
     password1 = forms.CharField(label="Password",widget=forms.PasswordInput(attrs={"class":'form-control'}))
@@ -18,6 +18,7 @@ class UserRegistrationForm(UserCreationForm):
         fields = ['username','email','password1','password2']
 
 
+#form for user login
 class LoginForm(AuthenticationForm):
     username = UsernameField(widget=forms.TextInput(attrs={'autofocus':True, 'class':'form-control'}))
     password = forms.CharField(label=_('Password'), 
@@ -25,6 +26,8 @@ class LoginForm(AuthenticationForm):
     widget=forms.PasswordInput(attrs={'autocomplete':'current-password','class':'form-control'}))
 
 
+
+#form for change password
 class ChangePasswordForm(PasswordChangeForm):
     old_password = forms.CharField(label=_("Old Password"),
     strip=False, widget=forms.PasswordInput(attrs={'autocomplete':'current-password', 'autofocus':True, 'class':'form-control'}))
@@ -37,11 +40,15 @@ class ChangePasswordForm(PasswordChangeForm):
     widget=forms.PasswordInput(attrs={'autocomplete':'new-password','class':'form-control'}))
 
 
+
+#form for reset password
 class MyPasswordResetForm(PasswordResetForm):
     email = forms.EmailField(label=_("Email"), max_length=254,
     widget=forms.EmailInput(attrs={'autocomplete':'email', 'class':'form-control'}))
 
 
+
+#form to set new password
 class MySetPasswordForm(SetPasswordForm):
     
     new_password1 = forms.CharField(label=_("New Password"), strip=False, 
@@ -54,13 +61,47 @@ class MySetPasswordForm(SetPasswordForm):
 class DateInput(forms.DateInput):
     input_type = 'date'
 
-class PersonalDetailsForm(forms.ModelForm):
+
+#form for patient details
+class PatientDetailsForm(forms.ModelForm):
     class Meta:
-        model = PersonalDetails
-        fields = ['fullName','age','sex','phone','address','profile_pic']
+        model = PatientDetails
+        fields = ['fullName','age','gender','phone','address','profile_pic']
         widgets = {'fullName':forms.TextInput(attrs={'class':'form-control'}),
                     'age':forms.NumberInput(attrs={'class':'form-control'}),
-                    'sex':forms.Select(attrs={'class':'form-control'}),
+                    'gender':forms.Select(attrs={'class':'form-control'}),
                     'phone':forms.NumberInput(attrs={'class':'form-control'}),
                     'address':forms.TextInput(attrs={'class':'form-control'}),
+                    'profile_pic':forms.ClearableFileInput(attrs={'class':'form-control'})}
+
+
+
+#form for doctor details
+class DoctorDetailsForm(forms.ModelForm):
+    class Meta:
+        model = DoctorDetails
+        fields = ['fullName','age','gender','phone','address','department','experience','education','profile_pic']
+        widgets = {'fullName':forms.TextInput(attrs={'class':'form-control'}),
+                    'age':forms.NumberInput(attrs={'class':'form-control'}),
+                    'gender':forms.Select(attrs={'class':'form-control'}),
+                    'phone':forms.NumberInput(attrs={'class':'form-control'}),
+                    'address':forms.TextInput(attrs={'class':'form-control'}),
+                    'department':forms.Select(attrs={'class':'form-control'}),
+                    'experience':forms.Textarea(attrs={'class':'form-control'}),
+                    'education':forms.Textarea(attrs={'class':'form-control'}),
+                    'profile_pic':forms.ClearableFileInput(attrs={'class':'form-control'})}
+
+
+
+#form for staff details
+class StaffDetailsForm(forms.ModelForm):
+    class Meta:
+        model = StaffDetails
+        fields = ['fullName','age','gender','phone','address','department','profile_pic']
+        widgets = {'fullName':forms.TextInput(attrs={'class':'form-control'}),
+                    'age':forms.NumberInput(attrs={'class':'form-control'}),
+                    'gender':forms.Select(attrs={'class':'form-control'}),
+                    'phone':forms.NumberInput(attrs={'class':'form-control'}),
+                    'address':forms.TextInput(attrs={'class':'form-control'}),
+                    'department':forms.Select(attrs={'class':'form-control'}),
                     'profile_pic':forms.ClearableFileInput(attrs={'class':'form-control'})}

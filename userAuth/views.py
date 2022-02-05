@@ -1,22 +1,37 @@
 import imp
 from django.shortcuts import render, redirect
 from django.views import View
-from userAuth.forms import UserCreationForm, UserRegistrationForm
+from userAuth.forms import  UserRegistrationForm
 from django.contrib import messages
-from userAuth.forms import PersonalDetailsForm
-from userAuth.models import PersonalDetails
+from userAuth.forms import PatientDetailsForm, DoctorDetailsForm, StaffDetailsForm
+from userAuth.models import PatientDetails, DoctorDetails, StaffDetails
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
+import datetime
 # Create your views here.
 
 
 @login_required
 def getUserDashboard(request):
         try:
-            prof = PersonalDetails.objects.get(user=request.user)
-            return render(request,'userAuth/userDashHome.html',{'prof':prof})
+            if request.user.groups.filter(name__in=['patient']).exists():
+                p_prof = PatientDetails.objects.get(user=request.user)
+
+                return render(request,'userAuth/userDashHome.html',{'p_prof':p_prof})
+
+            elif request.user.groups.filter(name__in=['doctor']).exists():
+                d_prof = DoctorDetails.objects.get(user=request.user)
+
+                return render(request,'userAuth/userDashHome.html',{'d_prof':d_prof}) 
+            
+            elif request.user.groups.filter(name__in=['staff']).exists():
+                s_prof = StaffDetails.objects.get(user=request.user)
+
+                return render(request,'userAuth/userDashHome.html',{'s_prof':s_prof}) 
         except:
+            # print(datetime.date)
             return render(request,'userAuth/userDashHome.html',{})
+            
    
 
 class UserRegistrationView(View):
@@ -37,32 +52,119 @@ class UserRegistrationView(View):
 class EditProfile(View):
 
     def get(self,request):
-        try:
-            prof = PersonalDetails.objects.get(user=request.user)
-            fullName = prof.fullName
-            age = prof.age
-            sex = prof.sex
-            phone = prof.phone
-            address = prof.address
-            profile_pic = prof.profile_pic
-            form = PersonalDetailsForm(initial={'fullName':fullName,'age':age,'sex':sex,'phone':phone,'address':address, 'profile_pic': profile_pic})
-        except:
-            form = PersonalDetailsForm()
+        #if the active user is patient
+        if request.user.groups.filter(name__in=['patient']).exists():
+            try:
+                prof = PatientDetails.objects.get(user=request.user)
+                fullName = prof.fullName
+                age = prof.age
+                gender = prof.gender
+                phone = prof.phone
+                address = prof.address
+                profile_pic = prof.profile_pic
+                form = PatientDetailsForm(initial={'fullName':fullName,'age':age,'gender':gender,'phone':phone,'address':address, 'profile_pic': profile_pic})
+            except:
+                form = PatientDetailsForm()
 
-        d = {'form':form}
-        return render(request,'userAuth/editprofile.html',d)
+            
+            try:
+                p_prof = PatientDetails.objects.get(user=request.user)
+            except:
+                p_prof=""
+
+            d = {'form':form,'p_prof':p_prof}
+            return render(request,'userAuth/editprofile.html',d)
+
+
+        elif request.user.groups.filter(name__in=['doctor']).exists():
+            try:
+                prof = DoctorDetails.objects.get(user=request.user)
+                fullName = prof.fullName
+                age = prof.age
+                gender = prof.gender
+                phone = prof.phone
+                address = prof.address
+                department = prof.department
+                experience = prof.experience
+                education = prof.education
+                profile_pic = prof.profile_pic
+                form = DoctorDetailsForm(initial={'fullName':fullName,'age':age,'gender':gender,'phone':phone,'address':address,'department':department,'experience':experience,'education':education, 'profile_pic': profile_pic})
+            except:
+                form = DoctorDetailsForm()
+            
+    
+            try:
+                d_prof = DoctorDetails.objects.get(user=request.user)
+            except:
+                d_prof=""
+
+            d = {'form':form,'d_prof':d_prof}
+
+            return render(request,'userAuth/editprofile.html',d)
+
+
+        elif request.user.groups.filter(name__in=['staff']).exists():
+            try:
+                prof = StaffDetails.objects.get(user=request.user)
+                fullName = prof.fullName
+                age = prof.age
+                gender = prof.gender
+                phone = prof.phone
+                address = prof.address
+                department = prof.department
+                profile_pic = prof.profile_pic
+                form = StaffDetailsForm(initial={'fullName':fullName,'age':age,'gender':gender,'phone':phone,'address':address,'department':department,'profile_pic': profile_pic})
+            except:
+                form = StaffDetailsForm()
+
+            try:
+                s_prof = StaffDetails.objects.get(user=request.user)
+            except:
+                s_prof=""
+
+            d = {'form':form,'s_prof':s_prof}
+
+            return render(request,'userAuth/editprofile.html',d)
+        
 
     
     def post(self,request):
-        try:
-            profile = PersonalDetails.objects.get(user=request.user)
-            form = PersonalDetailsForm(request.POST, request.FILES, instance=profile)
-            if form.is_valid():
-                form.save()
-        except:
-            form = PersonalDetailsForm(request.POST, request.FILES)
-            if form.is_valid():
-                form.instance.user = request.user #addong foreign key currente user instance to Profile model
-                form.save()
+        if request.user.groups.filter(name__in=['patient']).exists():
+            try:
+                profile = PatientDetails.objects.get(user=request.user)
+                form = PatientDetailsForm(request.POST, request.FILES, instance=profile)
+                if form.is_valid():
+                    form.save()
+            except:
+                form = PatientDetailsForm(request.POST, request.FILES)
+                if form.is_valid():
+                    form.instance.user = request.user #adding foreign key currente user instance to Profile model
+                    form.save()
+
+
+        elif request.user.groups.filter(name__in=['doctor']).exists():
+            try:
+                profile = DoctorDetails.objects.get(user=request.user)
+                form = DoctorDetailsForm(request.POST, request.FILES, instance=profile)
+                if form.is_valid():
+                    form.save()
+            except:
+                form = DoctorDetailsForm(request.POST, request.FILES)
+                if form.is_valid():
+                    form.instance.user = request.user #adding foreign key currente user instance to Profile model
+                    form.save()
+
         
+        elif request.user.groups.filter(name__in=['staff']).exists():
+            try:
+                profile = StaffDetails.objects.get(user=request.user)
+                form = StaffDetailsForm(request.POST, request.FILES, instance=profile)
+                if form.is_valid():
+                    form.save()
+            except:
+                form = StaffDetailsForm(request.POST, request.FILES)
+                if form.is_valid():
+                    form.instance.user = request.user #adding foreign key currente user instance to Profile model
+                    form.save()
+            
         return redirect('/accounts/editprofile/')
