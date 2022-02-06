@@ -7,10 +7,15 @@
 
 }
 
+#custom-active a{
+    color: #0AB8B7;
+}
+
 #customHeaderUl li a{
     font-size: 18px;
-    color: black;
+    /* color: black; */
     text-transform: uppercase;
+    font-weight: bold;
     
 }
 
@@ -18,7 +23,17 @@
     color: #0AB8B7;
 }
 
+
 .view-book-container{
     display: flex;
     justify-content: space-between;
 }
+
+
+/* doctor profile css  */
+
+.experience-education-container h5{
+    background-color: #ed6fac;
+     padding: 5px 0px 5px 0px; 
+     text-align: center; color: white;
+    }

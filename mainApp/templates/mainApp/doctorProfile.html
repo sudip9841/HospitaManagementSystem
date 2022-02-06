@@ -6,6 +6,37 @@
 
 {% block mainContent %}
     <div class="container">
-        <h1>doctor profile</h1>
+        {% if doctor %}
+        <div class="row gy-5 justify-content-center mt-4">
+
+            <div style="text-align: center;" class="col-lg-4 col-12 doctor-image-container border p-5">
+                <img class="img-fluid"  src="/media/{{doctor.profile_pic}}" alt="doctor picture">
+                <h3>Dr. {{doctor.fullName}}</h3>
+                <p>{{doctor.department}}</p>
+                <a href="#"><button style="background-color: #164A96;" class="btn btn-primary">Book Appointment</button></a>
+            </div>
+
+            <div class="col-lg-8 col-12 doctor-details-container">
+                <div class="experience-education-container p-5">
+                    <div class="experience">
+                        <h5>Experience</h5>
+                        <p>{{doctor.experience}}</p>
+                    </div>
+
+                    <div class="education">
+                        <h5>Education</h5>
+                        <p>{{doctor.education}}</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+        {% else %}
+
+        <h4 style="text-align: center; color: white;" class="bg-danger mt-5 p-3">Sorry ! We did not find any doctor</h4>
+
+        {% endif %}
+        
     </div>
-{% block mainContent %}
+{% endblock mainContent %}
