@@ -1,6 +1,7 @@
 from statistics import mode
 from django.db import models
 from django.contrib.auth.models import User
+from django.core.validators import MaxValueValidator, MinValueValidator
 
 GENDER_CHOICES = (
     ('M','Male'),
@@ -41,6 +42,9 @@ class PatientDetails(models.Model):
     address = models.CharField(max_length=50)
     profile_pic = models.ImageField(upload_to='profilepic', blank=True, null=True)
 
+    def __Str__(self):
+        return self.fullName
+
 
 
 #for doctor
@@ -56,6 +60,9 @@ class DoctorDetails(models.Model):
     education = models.TextField()
     profile_pic = models.ImageField(upload_to='doctorprofilepic', blank=True, null=True)
 
+    def __Str__(self):
+        return self.fullName
+
 
 #for staff
 class StaffDetails(models.Model):
@@ -67,5 +74,20 @@ class StaffDetails(models.Model):
     address = models.CharField(max_length=50)
     department = models.CharField(choices=STAFF_DEPARTMENT_CHOICES, max_length=50)
     profile_pic = models.ImageField(upload_to='staffprofilepic', blank=True, null=True)
+
+    def __Str__(self):
+        return self.fullName
+
+
+#for non registered patient
+class NonRegisteredPatientDetails(models.Model):
+    fullName = models.CharField(max_length=50)
+    age = models.PositiveIntegerField()
+    gender = models.CharField(choices=GENDER_CHOICES, max_length=10)
+    phone = models.BigIntegerField(unique=True)
+    address = models.CharField(max_length=50)
+
+    def __Str__(self):
+        return self.phone
 
 

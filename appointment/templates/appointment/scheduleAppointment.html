@@ -1,0 +1,53 @@
+{% extends 'userAuth/baseUserDash.html' %}
+{% block title %} Schedule Appointment{% endblock title %}
+{% load auth_extras %}
+
+{% block userDashContent %}
+{% if request.user|has_group:"staff" %}
+<h4 style="text-align: center;">Schedule Appointment</h4>
+
+<form style="background-color: #ced7d8;" method="POST" class="p-5">
+    {% csrf_token %}
+
+    <div class="mb-3">
+        <label for="patientName" class="form-label">Patient Name</label>
+        <input type="text" class="form-control" id="patientName" name="patientName" required>
+    </div>
+    <div class="mb-3">
+        <label class="form-label">Doctor</label>
+        <select class="form-select" aria-label="Default select example" name="doctorName">
+            {% for doctor in doctors %}
+                <option value="{{doctor.fullName}}">{{doctor.fullName}}</option>
+            {% endfor %}
+          </select>
+    </div>
+    <div class="mb-3">
+        <label for="date">Date</label>
+        <input type="date" id="data" name="appointmentDate" class="form-control" required>
+    </div>
+
+    <div class="mb-3">
+        <label for="time">Time</label>
+        <select name="appointmentTime" id="time" class="form-select">
+            <option value="10">10 am</option>
+            <option value="11">11 am</option>
+            <option value="12">12 pm</option>
+            <option value="1">1 pm</option>
+            <option value="3">3 pm</option>
+            <option value="4">4 pm</option>
+            <option value="5">5 pm</option>
+            <option value="6">6 pm</option>
+        </select>
+    </div>
+
+    <button class="btn btn-dark">Book Appointment</button>
+
+</form>
+
+<!-- <form style="background-color: #ced7d8;"  method="POST" enctype="multipart/form-data" class="p-5">
+    {% csrf_token %}
+    
+</form> -->
+
+{% endif %}
+{% endblock userDashContent %}

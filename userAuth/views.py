@@ -3,8 +3,8 @@ from django.shortcuts import render, redirect
 from django.views import View
 from userAuth.forms import  UserRegistrationForm
 from django.contrib import messages
-from userAuth.forms import PatientDetailsForm, DoctorDetailsForm, StaffDetailsForm
-from userAuth.models import PatientDetails, DoctorDetails, StaffDetails
+from userAuth.forms import PatientDetailsForm, DoctorDetailsForm, StaffDetailsForm, NonRegisteredPatientDetailsForm
+from userAuth.models import PatientDetails, DoctorDetails, StaffDetails, NonRegisteredPatientDetails
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import Group
 import datetime
@@ -168,3 +168,68 @@ class EditProfile(View):
                     form.save()
             
         return redirect('/accounts/editprofile/')
+
+
+
+class AddNonRegisterPatientView(View):
+    def get(self,request):
+        form = NonRegisteredPatientDetailsForm()
+        try:
+            p_prof = StaffDetails.objects.get(user=request.user)
+        except:
+            p_prof=""
+
+        d = {"p_prof":p_prof,'form':form}
+        return render(request,'userAuth/addNonRegisterPatient.html',d)
+    
+    def post(self,request):
+        form = NonRegisteredPatientDetailsForm(request.POST)
+        try:
+            p_prof = StaffDetails.objects.get(user=request.user)
+        except:
+            p_prof=""
+
+        if form.is_valid():
+            form.save()
+            # return redirect(request,'/viewPatients/')
+            messages.success(request, "User Added sucessfully sucessfully")
+        d = {"p_prof":p_prof,'form':form}
+        return render(request,'userAuth/addNonRegisterPatient.html',d)
+
+
+
+class ViewPatientsView(View):
+    def get(self,request):
+        try:
+            nPatientDetails = NonRegisteredPatientDetails.objects.all()
+            d = {'nPatientDetails':nPatientDetails}
+        except:
+            pass
+            d ={}
+        return render(request,'userAuth/viewPatients.html',d)
+    
+    def delete(self,request):
+        print("delete is clicked")
+        try:
+            nPatientDetails = NonRegisteredPatientDetails.objects.all()
+            d = {'nPatientDetails':nPatientDetails}
+        except:
+            pass
+            d ={}
+        return render(request,'userAuth/viewPatients.html',d)
+
+
+
+def deleteNonRegUser(request,id):
+
+    if id is not None:
+        try:
+            u = NonRegisteredPatientDetails.objects.get(id=id)
+            u.delete()
+            return redirect('/accounts/viewPatients/')
+        except:
+            return redirect('/accounts/viewPatients/')
+
+    return redirect('/accounts/viewPatients/')
+
+

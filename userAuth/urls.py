@@ -1,7 +1,9 @@
+from unicodedata import name
 from django.urls import path
 from userAuth import views
 from django.contrib.auth import views as auth_views
 from userAuth.forms import LoginForm, ChangePasswordForm, MyPasswordResetForm, MySetPasswordForm
+from django.contrib.auth.decorators import login_required
 
 
 urlpatterns = [
@@ -27,5 +29,10 @@ urlpatterns = [
     path('changepassworddone/',auth_views.PasswordChangeView.as_view(template_name='userAuth/changepassworddone.html'), name='changepassworddone'),
 
     path('editprofile/', views.EditProfile.as_view(), name='editprofile'),
+
+    path('addNonRegUser',views.AddNonRegisterPatientView.as_view(), name="addNonRegUser"),
+    path('deleteNonRegUser/<int:id>',views.deleteNonRegUser, name="deleteNonRegUser"),
+    path('viewPatients/',login_required(views.ViewPatientsView.as_view()),name="viewPatients"),
+
 
 ]
