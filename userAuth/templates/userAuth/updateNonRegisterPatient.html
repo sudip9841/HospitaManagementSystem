@@ -1,0 +1,25 @@
+{% extends 'userAuth/baseUserDash.html' %}
+{% block title %} Update Patient {% endblock title %}
+
+{% block userDashContent %}
+<h4 style="text-align: center;">Update Patient</h4>
+
+<form style="background-color: #ced7d8;"  method="POST" class="p-5">
+    <!-- {% if messages %}
+            {% for message in messages%}
+            <div {% if message.tags %} class="alert alert-success" role="alert" {% endif %}>
+                {{message}}
+            </div>
+            {% endfor %}
+    {% endif %} -->
+    {% csrf_token %}
+    <input type="number" hidden value="{{id}}" name="id">
+    {% for fm in form %}
+        {{fm.label_tag}} {{fm}} <small class="text-danger">
+            {{fm.errors}}
+        </small>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary mt-3">Update Info</button>
+</form>
+{% endblock userDashContent %}

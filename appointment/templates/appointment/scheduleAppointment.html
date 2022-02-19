@@ -9,10 +9,21 @@
 <form style="background-color: #ced7d8;" method="POST" class="p-5">
     {% csrf_token %}
 
+    {% if messages %}
+            {% for message in messages%}
+            <div {% if message.tags %} class="alert alert-danger" role="alert" {% endif %}>
+                {{message}}
+            </div>
+            {% endfor %}
+    {% endif %}
+
+    <input type="id" name="id" value="{{nonRegPatient.id}}" hidden>
+
     <div class="mb-3">
         <label for="patientName" class="form-label">Patient Name</label>
-        <input type="text" class="form-control" id="patientName" name="patientName" required>
+        <input type="text" class="form-control" id="patientName" name="patientName" value="{{nonRegPatient.fullName}}" readonly>
     </div>
+
     <div class="mb-3">
         <label class="form-label">Doctor</label>
         <select class="form-select" aria-label="Default select example" name="doctorName">
@@ -21,7 +32,9 @@
             {% endfor %}
           </select>
     </div>
-    <div class="mb-3">
+
+    
+    <!-- <div class="mb-3">
         <label for="date">Date</label>
         <input type="date" id="data" name="appointmentDate" class="form-control" required>
     </div>
@@ -38,16 +51,19 @@
             <option value="5">5 pm</option>
             <option value="6">6 pm</option>
         </select>
-    </div>
+    </div> -->
 
-    <button class="btn btn-dark">Book Appointment</button>
+    {% for fm in form %}
+        {{fm.label_tag}} {{fm}} <small class="text-danger">
+            {{fm.errors}}
+        </small>
+        <br>
+    {% endfor %}
+
+    <button class="btn btn-dark mt-3">Book Appointment</button>
 
 </form>
 
-<!-- <form style="background-color: #ced7d8;"  method="POST" enctype="multipart/form-data" class="p-5">
-    {% csrf_token %}
-    
-</form> -->
 
 {% endif %}
 {% endblock userDashContent %}

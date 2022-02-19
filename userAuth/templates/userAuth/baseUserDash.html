@@ -69,9 +69,8 @@
             <ul>
               <!-- id="user-dash-nav-active" -->
               <li><a href="{% url 'userDashHome' %}">Dashboard</a></li>
-              <li><a href="{% url 'addNonRegUser' %}">Add patient</a></li>
-              <li><a href="{% url 'viewPatients' %}">View Patients</a></li>
-              <li><a id="{{sAppointmentActive}}" href="{% url 'scheduleAppointment' %}">Schedule appointments</a></li>
+              <li><a id="{{sAddPatient}}" href="{% url 'addNonRegUser' %}">Add patient</a></li>
+              <li><a id="{{sViewPatientActive}}" href="{% url 'viewPatients' %}">View Patients</a></li>
             </ul>
             {% endif %}
           </div>
@@ -94,7 +93,9 @@
 
         <div class="userDash">
           <a style="text-decoration: none;" href="{% url 'home'%}">
-            <h2 id="user-dash-hospital-logo">Nepal Hospital</h2>
+            <div style="text-align: center;">
+              <h2 style="display: inline;" id="user-dash-hospital-logo">Nepal Hospital</h2>
+            </div>
           </a>
 
           {% block userDashContent %}
@@ -117,7 +118,7 @@
       function deleteUser(id)
       {
 
-        let c = confirm("Are you sure you want to delete the user ?"+id)
+        let c = confirm("Are you sure you want to delete the user ?")
         if(c)
         {
           alert("User deleted sucessfully")

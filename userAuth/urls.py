@@ -30,9 +30,13 @@ urlpatterns = [
 
     path('editprofile/', views.EditProfile.as_view(), name='editprofile'),
 
+    #add non register patient url
     path('addNonRegUser',views.AddNonRegisterPatientView.as_view(), name="addNonRegUser"),
     path('deleteNonRegUser/<int:id>',views.deleteNonRegUser, name="deleteNonRegUser"),
     path('viewPatients/',login_required(views.ViewPatientsView.as_view()),name="viewPatients"),
+
+    #update non register patient url
+    path('updateNonRegPatient/<int:id>',login_required(views.UpdateNonRegUserView.as_view()),name="updateNonRegPatient"),
 
 
 ]

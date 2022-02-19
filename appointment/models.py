@@ -25,9 +25,9 @@ PAYMENT_STATUS_CHOICES = (
 
 
 class AppointmentBooking(models.Model):
-    patient = models.OneToOneField(PatientDetails, on_delete=models.CASCADE,blank=True,null=True)
-    nonRegisteredPatient = models.OneToOneField(NonRegisteredPatientDetails, on_delete=models.CASCADE, blank=True,null=True)
-    doctor = models.OneToOneField(DoctorDetails,on_delete=models.CASCADE)
+    patient = models.ForeignKey(PatientDetails, on_delete=models.CASCADE,blank=True,null=True)
+    nonRegisteredPatient = models.ForeignKey(NonRegisteredPatientDetails, on_delete=models.CASCADE, blank=True,null=True)
+    doctor = models.ForeignKey(DoctorDetails,on_delete=models.CASCADE)
     appointmentDate = models.DateField()
     appointmentTime = models.IntegerField(choices=TIME_CHOICES)
     appointmentStatus = models.CharField(choices=APPOINTMENT_STATUS_CHOICES, max_length=20, default="booked")
