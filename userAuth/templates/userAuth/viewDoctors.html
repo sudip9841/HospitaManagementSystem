@@ -39,7 +39,7 @@
                 <td>{{doc.gender}}</td>
                 <td>{{doc.phone}}</td>
                 <td>{{doc.department}}</td>
-                <td><a href="{% url 'viewDoctorAppointment' doc.id %}"><button class="btn btn-info">View Appointments</button></a></td>
+                <td><a href="{% url 'viewDoctorAppointment' doc.id 1 %}"><button class="btn btn-info">View Appointments</button></a></td>
               </tr>
 
               {% endfor %}

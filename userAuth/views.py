@@ -293,8 +293,8 @@ class ViewDoctorLists(View):
         return redirect('/')
 
 class ViewDoctorAppointment(View):
-    def get(self,request,id):
-        if id is not None:
+    def get(self,request,id,day):
+        if id is not None and day is not None:
             try:
                 p_prof = StaffDetails.objects.get(user=request.user)
             except:
@@ -303,9 +303,9 @@ class ViewDoctorAppointment(View):
             # tomorrowAppointment = AppointmentBooking.objects.all().filter(appointmentDate=tomorrow)
             # print(tomorrowAppointment)
             # print(tomorrow.day - datetime.datetime.now().day)
-            todayDate = datetime.datetime.now()
+            date = datetime.datetime.now() + timedelta(days=day-1)
             try:
-                todayAppointment = AppointmentBooking.objects.all().filter(appointmentDate=todayDate,doctor=DoctorDetails.objects.get(id=id))
+                todayAppointment = AppointmentBooking.objects.all().filter(appointmentDate=date,doctor=DoctorDetails.objects.get(id=id))
             except:
                 return redirect("/")
             if request.user.groups.filter(name__in=['staff']).exists():

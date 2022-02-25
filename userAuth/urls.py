@@ -42,7 +42,7 @@ urlpatterns = [
     path('viewDoctorsList',login_required(views.ViewDoctorLists.as_view()),name='viewDoctorsList'),
     
     #view doctor profile and see the list of the patients who have appointment with that doctor
-    path('viewDoctorAppointment/<int:id>',login_required(views.ViewDoctorAppointment.as_view()),name="viewDoctorAppointment"),
+    path('viewDoctorAppointment/<int:id>/<int:day>',login_required(views.ViewDoctorAppointment.as_view()),name="viewDoctorAppointment"),
 
 
 ]
