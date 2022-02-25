@@ -5,9 +5,13 @@ from userAuth.forms import  UserRegistrationForm
 from django.contrib import messages
 from userAuth.forms import PatientDetailsForm, DoctorDetailsForm, StaffDetailsForm, NonRegisteredPatientDetailsForm
 from userAuth.models import GENDER_CHOICES, PatientDetails, DoctorDetails, StaffDetails, NonRegisteredPatientDetails
+from appointment.models import AppointmentBooking
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group
 import datetime
+from datetime import timedelta
+from django.utils import timezone
+
 # Create your views here.
 
 
@@ -272,6 +276,50 @@ class UpdateNonRegUserView(View):
         d = {'form':form,'d_prof':d_prof,'id':id}
 
         return render(request,'userAuth/updateNonRegisterPatient.html',d)
+
+
+class ViewDoctorLists(View):
+    def get(self,request):
+        if request.user.groups.filter(name__in=['staff']).exists():
+            doctors = DoctorDetails.objects.all()
+            try:
+                d_prof = StaffDetails.objects.get(user=request.user)
+            except:
+                d_prof=""
+            d = {'d_prof':d_prof,'doctors':doctors,'sViewDoctorActive':'custom-active'}
+
+            return render(request,'userAuth/viewDoctors.html',d)
+
+        return redirect('/')
+
+class ViewDoctorAppointment(View):
+    def get(self,request,id):
+        if id is not None:
+            try:
+                p_prof = StaffDetails.objects.get(user=request.user)
+            except:
+                p_prof=""
+            # tomorrow = datetime.datetime.now() + timedelta(days=2)
+            # tomorrowAppointment = AppointmentBooking.objects.all().filter(appointmentDate=tomorrow)
+            # print(tomorrowAppointment)
+            # print(tomorrow.day - datetime.datetime.now().day)
+            todayDate = datetime.datetime.now()
+            try:
+                todayAppointment = AppointmentBooking.objects.all().filter(appointmentDate=todayDate,doctor=DoctorDetails.objects.get(id=id))
+            except:
+                return redirect("/")
+            if request.user.groups.filter(name__in=['staff']).exists():
+                doctor = DoctorDetails.objects.get(id=id)
+            
+                d = {'doctor':doctor,'p_prof':p_prof,'todayAppointment':todayAppointment}
+
+                return render(request,'userAuth/viewDoctorAppointment.html',d)
+
+            return redirect('/')
+
+        return redirect('/')
+
+
 
 
 

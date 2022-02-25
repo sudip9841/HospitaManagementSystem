@@ -38,5 +38,11 @@ urlpatterns = [
     #update non register patient url
     path('updateNonRegPatient/<int:id>',login_required(views.UpdateNonRegUserView.as_view()),name="updateNonRegPatient"),
 
+    #view doctors from staff dashboard
+    path('viewDoctorsList',login_required(views.ViewDoctorLists.as_view()),name='viewDoctorsList'),
+    
+    #view doctor profile and see the list of the patients who have appointment with that doctor
+    path('viewDoctorAppointment/<int:id>',login_required(views.ViewDoctorAppointment.as_view()),name="viewDoctorAppointment"),
+
 
 ]

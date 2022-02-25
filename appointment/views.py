@@ -11,7 +11,7 @@ from django.contrib import messages
 
 # Create your views here.
 
-
+#booking appointment view for the patient who doesnot have their account
 class BookAppointmentNonRegPatientView(View):
     
     def get(self,request,id):
@@ -63,6 +63,7 @@ class BookAppointmentNonRegPatientView(View):
         if form.is_valid():
             form.instance.nonRegisteredPatient = NonRegisteredPatientDetails.objects.get(id=id)
             form.instance.doctor = DoctorDetails.objects.get(fullName=doctorName)
+            form.instance.paymentStatus = "paid"
             form.save()
 
         return redirect('/accounts/viewPatients/')

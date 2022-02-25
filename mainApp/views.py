@@ -1,3 +1,4 @@
+from datetime import date
 from turtle import home
 from django.shortcuts import render
 from userAuth.models import PatientDetails, DoctorDetails
@@ -14,6 +15,8 @@ from django.template import RequestContext
 def displayHomePage(request):
     # if request.user.groups.filter(name__in=['doctor']).exists():
     #     print("yes")
+    today = date.today()
+    print(today)
     homeactive="custom-active"
     return render(request,'mainApp/index.html',{"homeactive":homeactive})
 

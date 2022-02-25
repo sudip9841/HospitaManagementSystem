@@ -70,7 +70,8 @@
               <!-- id="user-dash-nav-active" -->
               <li><a href="{% url 'userDashHome' %}">Dashboard</a></li>
               <li><a id="{{sAddPatient}}" href="{% url 'addNonRegUser' %}">Add patient</a></li>
-              <li><a id="{{sViewPatientActive}}" href="{% url 'viewPatients' %}">View Patients</a></li>
+              <li><a id="{{sViewPatientActive}}" href="{% url 'viewPatients' %}">Patients List</a></li>
+              <li><a id="{{sViewDoctorActive}}" href="{% url 'viewDoctorsList' %}">Doctors List</a></li>
             </ul>
             {% endif %}
           </div>

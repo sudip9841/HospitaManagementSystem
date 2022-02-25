@@ -125,3 +125,9 @@
 #custom-active{
     color: #0AB8B7;
 }
+
+.experience-education-container h5{
+    background-color: #ed6fac;
+     padding: 5px 0px 5px 0px; 
+     text-align: center; color: white;
+    }
