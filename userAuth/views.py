@@ -294,30 +294,34 @@ class ViewDoctorLists(View):
 
 class ViewDoctorAppointment(View):
     def get(self,request,id,day):
-        if id is not None and day is not None:
-            try:
-                p_prof = StaffDetails.objects.get(user=request.user)
-            except:
-                p_prof=""
-            # tomorrow = datetime.datetime.now() + timedelta(days=2)
-            # tomorrowAppointment = AppointmentBooking.objects.all().filter(appointmentDate=tomorrow)
-            # print(tomorrowAppointment)
-            # print(tomorrow.day - datetime.datetime.now().day)
-            date = datetime.datetime.now() + timedelta(days=day-1)
-            try:
-                todayAppointment = AppointmentBooking.objects.all().filter(appointmentDate=date,doctor=DoctorDetails.objects.get(id=id))
-            except:
-                return redirect("/")
-            if request.user.groups.filter(name__in=['staff']).exists():
-                doctor = DoctorDetails.objects.get(id=id)
-            
-                d = {'doctor':doctor,'p_prof':p_prof,'todayAppointment':todayAppointment}
+        if request.user.groups.filter(name__in=['staff']).exists():
+            if id is not None and day is not None:
+                try:
+                    p_prof = StaffDetails.objects.get(user=request.user)
+                except:
+                    p_prof=""
+                # tomorrow = datetime.datetime.now() + timedelta(days=2)
+                # tomorrowAppointment = AppointmentBooking.objects.all().filter(appointmentDate=tomorrow)
+                # print(tomorrowAppointment)
+                # print(tomorrow.day - datetime.datetime.now().day)
+                date = datetime.datetime.now() + timedelta(days=day-1)
+                try:
+                    todayAppointment = AppointmentBooking.objects.all().filter(appointmentDate=date,doctor=DoctorDetails.objects.get(id=id))
+                except:
+                    return redirect("/")
+                if request.user.groups.filter(name__in=['staff']).exists():
+                    doctor = DoctorDetails.objects.get(id=id)
+                
+                    d = {'doctor':doctor,'p_prof':p_prof,'todayAppointment':todayAppointment}
 
-                return render(request,'userAuth/viewDoctorAppointment.html',d)
+                    return render(request,'userAuth/viewDoctorAppointment.html',d)
+
+                return redirect('/')
 
             return redirect('/')
-
+            
         return redirect('/')
+        
 
 
 
