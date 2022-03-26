@@ -2,8 +2,9 @@
 {% block title %} Schedule Appointment{% endblock title %}
 {% load auth_extras %}
 
+
 {% block userDashContent %}
-{% if request.user|has_group:"staff" %}
+{% if request.user|has_group:"patient" %}
 <h4 style="text-align: center;">Schedule Appointment</h4>
 
 <form style="background-color: #ced7d8;" method="POST" class="p-5">
@@ -17,12 +18,6 @@
             {% endfor %}
     {% endif %}
 
-    <input type="id" name="id" value="{{nonRegPatient.id}}" hidden>
-
-    <div class="mb-3">
-        <label for="patientName" class="form-label">Patient Name</label>
-        <input type="text" class="form-control" id="patientName" name="patientName" value="{{nonRegPatient.fullName}}" readonly>
-    </div>
 
     <div class="mb-3">
         <label class="form-label">Doctor</label>
@@ -46,4 +41,5 @@
 
 
 {% endif %}
-{% endblock userDashContent %}
+
+{% endblock userDashContent%}

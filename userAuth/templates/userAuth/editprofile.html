@@ -6,17 +6,26 @@
 {% block userDashContent %}
 
 
-  <h4 style="text-align: center;">Edit Profile</h4>
+<h4 style="text-align: center;">Edit Profile</h4>
 
-    <form style="background-color: #ced7d8;"  method="POST" enctype="multipart/form-data" class="p-5">
-        {% csrf_token %}
-        {% for fm in form %}
-            {{fm.label_tag}} {{fm}} <small class="text-danger">
-                {{fm.errors}}
-            </small>
-        {% endfor %}
+<form style="background-color: #ced7d8;" method="POST" enctype="multipart/form-data" class="p-5">
+    {% if messages %}
+    {% for message in messages%}
+    <div id="edit-patient-message" {% if message.tags %} class="alert alert-danger" role="alert" {% endif %}>
+        {{message}}
+    </div>
+    {% endfor %}
+    {% endif %}
 
-        <button type="submit" class="btn btn-primary mt-3">save changes</button>
-    </form>
+    
+    {% csrf_token %}
+    {% for fm in form %}
+    {{fm.label_tag}} {{fm}} <small class="text-danger">
+        {{fm.errors}}
+    </small>
+    {% endfor %}
+
+    <button type="submit" class="btn btn-primary mt-3">save changes</button>
+</form>
 
 {% endblock userDashContent %}

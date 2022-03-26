@@ -10,53 +10,52 @@
 
   <link rel="stylesheet" href="{% static 'userAuth/css/style.css'%}">
 
-
+  <script src="https://kit.fontawesome.com/0564185990.js" crossorigin="anonymous"></script>
   <!-- Bootstrap CSS -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css" rel="stylesheet"
     integrity="sha384-1BmE4kWBq78iYhFldvKuhfTAU6auU8tT94WrHftjDbrCEXSU1oBoqyl2QvZ6jIW3" crossorigin="anonymous">
-
   <title>NH | User | {% block title%} {% endblock title%}</title>
 </head>
 
 <body id="user-dash-body">
   {% if request.user.is_authenticated %}
 
-    <div class="user-navigation-dashboard">
+  <div class="user-navigation-dashboard">
 
-      <div class="user-navigation">
+    <div class="user-navigation">
 
-        <div class="userDashNav">
+      <div class="userDashNav">
 
-          <div class="user-profile">
-            <div id="user-profile-pic-container">
-              <!-- if thre the user has uploaded profile picture then it will show the particular picture -->
-              {% if p_prof.profile_pic %}
-              <img class="user-profile-pic" src="/media/{{p_prof.profile_pic}}" alt="profile">
-              {% elif d_prof.profile_pic %}
-              <img class="user-profile-pic" src="/media/{{d_prof.profile_pic}}" alt="profile">
-              {% elif s_prof.profile_pic %}
-              <img class="user-profile-pic" src="/media/{{s_prof.profile_pic}}" alt="profile">
-              {% else %}
-              <!-- else it will show the difault picture -->
-              <img class="user-profile-pic" src="{% static 'userAuth/images/nopic.png'%}" alt="">
-              {% endif %}
-            </div>
-            <p style="font-size: 16px;">{{request.user.username}}</p>
+        <div class="user-profile">
+          <div id="user-profile-pic-container">
+            <!-- if thre the user has uploaded profile picture then it will show the particular picture -->
+            {% if p_prof.profile_pic %}
+            <img class="user-profile-pic" src="/media/{{p_prof.profile_pic}}" alt="profile">
+            {% elif d_prof.profile_pic %}
+            <img class="user-profile-pic" src="/media/{{d_prof.profile_pic}}" alt="profile">
+            {% elif s_prof.profile_pic %}
+            <img class="user-profile-pic" src="/media/{{s_prof.profile_pic}}" alt="profile">
+            {% else %}
+            <!-- else it will show the difault picture -->
+            <img class="user-profile-pic" src="{% static 'userAuth/images/nopic.png'%}" alt="">
+            {% endif %}
           </div>
+          <p style="font-size: 16px;">{{request.user.username}}</p>
+        </div>
 
-          <hr class="divider">
+        <hr class="divider">
 
-          <div class="user-nav-setting">
+        <div class="user-nav-setting">
 
-      
+
           <div class="user-dash-nav">
             {% if request.user|has_group:"patient" %}
             <ul>
               <!-- id="user-dash-nav-active" -->
               <li><a href="{% url 'userDashHome' %}">Dashboard</a></li>
-              <li><a href="#">Appointments</a></li>
+              <li><a href="{% url 'bookreguserappointment'%}">Book appointment</a></li>
+              <li><a href="{% url 'myappointments' %}">My appointments</a></li>
               <li><a href="#">Test results</a></li>
-              <li><a href="#">Prescription</a></li>
             </ul>
             {% elif request.user|has_group:"doctor" %}
             <ul>
@@ -84,29 +83,31 @@
           </div>
         </div>
 
-        </div>
-
-
       </div>
 
 
-      <div style="height: 100vh; overflow: auto;" class="user-dashboard">
+    </div>
 
-        <div class="userDash">
-          <a style="text-decoration: none;" href="{% url 'home'%}">
-            <div style="text-align: center;">
-              <h2 style="display: inline;" id="user-dash-hospital-logo">Nepal Hospital</h2>
-            </div>
-          </a>
 
-          {% block userDashContent %}
+    <div style="height: 100vh; overflow: auto;" class="user-dashboard">
 
-          {% endblock userDashContent %}
+      <div class="userDash">
+        <a style="text-decoration: none;" href="{% url 'home'%}">
+          <div style="text-align: center;">
+            <h2 style="display: inline;" id="user-dash-hospital-logo">Nepal Hospital</h2>
+          </div>
+        </a>
 
-        </div>
+        {% block userDashContent %}
+
+
+
+        {% endblock userDashContent %}
+
       </div>
     </div>
-  
+  </div>
+
 
   {% endif %}
 
@@ -115,20 +116,25 @@
     integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
     crossorigin="anonymous"></script>
 
-    <script>
-      function deleteUser(id)
-      {
+  <script>
+    function deleteUser(id) {
 
-        let c = confirm("Are you sure you want to delete the user ?")
-        if(c)
-        {
-          alert("User deleted sucessfully")
-          location.href= `/accounts/deleteNonRegUser/${id}`
-        }
+      let c = confirm("Are you sure you want to delete the user ?")
+      if (c) {
+        alert("User deleted sucessfully")
+        location.href = `/accounts/deleteNonRegUser/${id}`
       }
-    </script>
+    }
 
- 
+
+    var message_ele = document.getElementById("edit-patient-message");
+
+    setTimeout(function () {
+      message_ele.style.display = "none";
+    }, 5000);
+  </script>
+
+
 </body>
 
 </html>

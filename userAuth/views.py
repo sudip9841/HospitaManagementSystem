@@ -11,8 +11,12 @@ from django.contrib.auth.models import Group
 import datetime
 from datetime import timedelta
 from django.utils import timezone
+from reportlab.pdfgen import canvas
 
 # Create your views here.
+
+def printReport(patientName,doctorName):
+    pass
 
 
 @login_required
@@ -295,7 +299,7 @@ class ViewDoctorLists(View):
 class ViewDoctorAppointment(View):
     def get(self,request,id,day):
         if request.user.groups.filter(name__in=['staff']).exists():
-            if id is not None and day is not None:
+            if id is not None and (day <=7 and day is not None):
                 try:
                     p_prof = StaffDetails.objects.get(user=request.user)
                 except:
@@ -321,6 +325,9 @@ class ViewDoctorAppointment(View):
             return redirect('/')
             
         return redirect('/')
+
+
+
         
 
 
