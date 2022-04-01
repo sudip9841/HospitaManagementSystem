@@ -1,11 +1,38 @@
 {% extends 'userAuth/baseUserDash.html' %}
+{% load auth_extras %}
 {% block title %} Dashboard {% endblock title %}
 
 
 {% block userDashContent %}
-    <h3>User Dashboard</h3>
-    <!-- <div style="border: 1px solid black; width: 300px; height: 2000px; background-color: black;">
-        
-    </div> -->
+
+{% if request.user|has_group:"patient" %}
+   <h1>Welcome to patient dashboard {{request.user.username}}</h1> 
+
+   <div class="row gap-3 justify-content-around">
+        <div class="col-3 bg-primary">
+            <h1>hello</h1>
+        </div>
+
+        <div class="col-3 bg-danger">
+            <h1>how</h1>
+        </div>
+
+        <div class="col-3 bg-secondary">
+            <h1>are</h1>
+        </div>
+
+        <div class="col-4 bg-success">
+            <h1>you</h1>
+        </div>
+   </div>
+{% endif %}
+    
+{% if request.user|has_group:"staff" %}
+    Welcome to staff dashboard {{request.user.username}}
+{% endif %}
+
+{% if request.user|has_group:"doctor" %}
+    Welcome to doctor dashboard {{request.user.username}}
+{% endif %}
     
 {% endblock userDashContent %}
