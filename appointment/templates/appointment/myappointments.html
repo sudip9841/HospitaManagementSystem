@@ -32,7 +32,7 @@
                 <td>{{appointment.appointmentTime}}</td>
                 <td>{{appointment.appointmentStatus}}</td>
                 <td>{{appointment.paymentStatus}}</td>
-                <td><Button class="btn btn-primary">Actions</Button></td>
+                <td><Button onclick="delUserAppointment('{{appointment.id}}')" class="btn btn-sm btn-danger"><i class="fa-solid fa-calendar-check"></i> Cancel</Button></td>
             </tr>
 
             {% endfor %}
@@ -45,5 +45,20 @@
 {% endif %}
 
 {% endif %}
+
+
+<script>
+
+    function delUserAppointment(id)
+    {
+       
+        let c = confirm(`Are you sure you want to delete the appointment with id ${id} ?`)
+            if (c) {
+                location.href = `/scheduleAppointment/deleteuserappointment/${id}`
+            }
+    }
+
+</script>
+
 
 {% endblock userDashContent%}

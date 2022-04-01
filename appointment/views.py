@@ -161,9 +161,33 @@ class MyAppointment(View):
         pd = PatientDetails.objects.get(user=request.user)
 
         myAppointments = AppointmentBooking.objects.all().filter(patient=pd)
+
+        try:
+            p_prof = PatientDetails.objects.get(user=request.user)
+        except:
+            p_prof=""
+
         
-        d = {'myAppointments':myAppointments}
+        d = {'myAppointments':myAppointments,'p_prof':p_prof}
         return render(request,'appointment/myappointments.html',d)
+
+
+def deleteUserAppointment(request,id):
+    if request.user.groups.filter(name__in=['patient']).exists():
+        if id is not None:
+            app_id = id
+            patient = PatientDetails.objects.get(user=request.user)
+            
+            appointment = AppointmentBooking.objects.get(id=app_id)
+           
+
+            if patient.user == appointment.patient.user:
+                appointment.delete()
+                return redirect('/scheduleAppointment/myappointments')
+            return redirect('/scheduleAppointment/myappointments')
+        return redirect('/scheduleAppointment/myappointments')
+    
+    return redirect('/')
 
 
 
