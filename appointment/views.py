@@ -150,7 +150,7 @@ class BookAppointmentRegisteredUser(View):
         if form.is_valid():
             form.instance.patient = PatientDetails.objects.get(user=request.user)
             form.instance.doctor = DoctorDetails.objects.get(fullName=doctorName)
-            form.instance.paymentStatus = "paid"
+            form.instance.paymentStatus = "pending"
             form.save()
 
         return redirect('/scheduleAppointment/myappointments')

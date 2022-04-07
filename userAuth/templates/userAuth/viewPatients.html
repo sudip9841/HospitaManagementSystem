@@ -41,9 +41,9 @@
         <td>{{npd.age}}</td>
         <td>{{npd.gender}}</td>
         <td>{{npd.phone}}</td>
-        <td class="d-flex gap-3"> <a href="{% url 'updateNonRegPatient' npd.id %}"><button class="btn btn-success"><span
+        <td class="d-flex gap-3"> <a href="{% url 'updateNonRegPatient' npd.id %}"><button class="btn btn-sm btn-success"><span
                 style="font-size: 12px;">Edit</span></button></a> <button onclick="deleteUser('{{npd.id}}')"
-            class="btn btn-danger"><span style="font-size:12px;">Delete</span></button> <a
+            class=" btn-sm btn-danger"><span style="font-size:12px;">Delete</span></button> <a
             href="{% url 'bookAppointmentNonReg' npd.id %}"><button class="btn"
               style="background-color: #164A96; font-size: 12px;"> <span style="color: white;">Book
                 appointment</span></button></a></td>

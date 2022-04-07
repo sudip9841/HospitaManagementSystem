@@ -1,0 +1,140 @@
+{% extends 'mainApp/base.html' %}
+{% load static %}
+{% load auth_extras %}
+{% block title%} Predict Diseases {% endblock title %}
+
+
+{% block mainContent%}
+<div class="container">
+
+    <div style="text-align: center;" class="bg-success mt-3">
+        {% if messages %}
+            {% for message in messages%}
+            <div {% if message.tags %} class="alert alert-success" role="alert" {% endif %}>
+                <h4 class="text-dark">Based on your symptoms you are diagnosed with <u>{{message}}</u></h4>
+            </div>
+            {% endfor %}
+            {% endif %}
+    </div>
+
+    <div class="diseases-form-container">
+    <form method="POST">
+        {% csrf_token %}
+
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label">Symptom 1</label>
+                <select class="form-select" aria-label="Default select example" name="sym-1">
+                    {% for Symotom,weight in severityWeight%}
+                    <option value="{{weight}}">{{Symotom}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col">
+                <label class="form-label">Symptom 2</label>
+                <select class="form-select" aria-label="Default select example" name="sym-2">
+                    <option value="0">None</option>
+                    {% for Symotom,weight in severityWeight%}
+                    <option value="{{weight}}">{{Symotom}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label">Symptom 3</label>
+                <select class="form-select" aria-label="Default select example" name="sym-3">
+                    <option value="0">None</option>
+                    {% for Symotom,weight in severityWeight%}
+                    <option value="{{weight}}">{{Symotom}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col">
+                <label class="form-label">Symptom 4</label>
+                <select class="form-select" aria-label="Default select example" name="sym-4">
+                    <option value="0">None</option>
+                    {% for Symotom,weight in severityWeight%}
+                    <option value="{{weight}}">{{Symotom}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label">Symptom 5</label>
+                <select class="form-select" aria-label="Default select example" name="sym-5">
+                    <option value="0">None</option>
+                    {% for Symotom,weight in severityWeight%}
+                    <option value="{{weight}}">{{Symotom}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col">
+                <label class="form-label">Symptom 6</label>
+                <select class="form-select" aria-label="Default select example" name="sym-6">
+                    <option value="0">None</option>
+                    {% for Symotom,weight in severityWeight%}
+                    <option value="{{weight}}">{{Symotom}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label">Symptom 7</label>
+                <select class="form-select" aria-label="Default select example" name="sym-7">
+                    <option value="0">None</option>
+                    {% for Symotom,weight in severityWeight%}
+                    <option value="{{weight}}">{{Symotom}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col">
+                <label class="form-label">Symptom 8</label>
+                <select class="form-select" aria-label="Default select example" name="sym-8">
+                    <option value="0">None</option>
+                    {% for Symotom,weight in severityWeight%}
+                    <option value="{{weight}}">{{Symotom}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col">
+                <label class="form-label">Symptom 9</label>
+                <select class="form-select" aria-label="Default select example" name="sym-9">
+                    <option value="0">None</option>
+                    {% for Symotom,weight in severityWeight%}
+                    <option value="{{weight}}">{{Symotom}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+
+            <div class="col">
+                <label class="form-label">Symptom 10</label>
+                <select class="form-select" aria-label="Default select example" name="sym-10">
+                    <option value="0">None</option>
+                    {% for Symotom,weight in severityWeight%}
+                    <option value="{{weight}}">{{Symotom}}</option>
+                    {% endfor %}
+                </select>
+            </div>
+        </div>
+
+        <button class="btn btn-dark">Predict Diseases</button>
+    </form>
+
+</div>
+</div>
+</div>
+{% endblock mainContent%}

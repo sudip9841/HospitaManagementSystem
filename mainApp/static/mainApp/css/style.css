@@ -37,3 +37,15 @@
      padding: 5px 0px 5px 0px; 
      text-align: center; color: white;
     }
+
+
+
+/* diseases prediction page  */
+
+
+.diseases-form-container{
+    margin: auto;
+    background-color: #ced7d8;
+    padding: 40px;
+    margin-top: 30px;
+}

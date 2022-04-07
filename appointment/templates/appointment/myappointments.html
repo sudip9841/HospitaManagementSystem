@@ -32,7 +32,10 @@
                 <td>{{appointment.appointmentTime}}</td>
                 <td>{{appointment.appointmentStatus}}</td>
                 <td>{{appointment.paymentStatus}}</td>
-                <td><Button onclick="delUserAppointment('{{appointment.id}}')" class="btn btn-sm btn-danger"><i class="fa-solid fa-calendar-check"></i> Cancel</Button></td>
+                <td class="d-flex gap-3">
+                    {% if appointment.paymentStatus == 'pending'%}  <button id="payment-button" class="btn btn-sm btn-outline-success">Pay with khalti</button>{% endif %}
+                   <Button onclick="delUserAppointment('{{appointment.id}}')" class="btn btn-sm btn-danger"><i class="fa-solid fa-calendar-check"></i> Cancel</Button> 
+                </td>
             </tr>
 
             {% endfor %}
