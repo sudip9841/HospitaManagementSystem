@@ -6,24 +6,88 @@
 {% block userDashContent %}
 
 {% if request.user|has_group:"patient" %}
-   <h1>Welcome to patient dashboard {{request.user.username}}</h1> 
+   <!-- <h1>Welcome to patient dashboard {{request.user.username}}</h1>  -->
 
-   <div class="row gap-3 justify-content-around">
-        <div class="col-3 bg-primary">
-            <h1>hello</h1>
+   <div class="row gap-2 gy-4 justify-content-between mt-3">
+
+        <div onclick="redirectToRegBookApp()" class="col-5 col-md-3 bg-primary dashboard-card">
+            <div class="row gy-3 justify-content-between p-1">
+                <div class="col-12">
+                   <span style="color: white;"><i class="fa-solid fa-calendar-plus fa-5x"></i></span> 
+                </div>
+
+                <div class="col-12">
+                    <h5 style="color: white;">Book appointment</h5>
+                </div>
+            </div>
         </div>
 
-        <div class="col-3 bg-danger">
-            <h1>how</h1>
+        <div onclick="redirectToRegViewApp()"  class="col-5 col-md-3  bg-dark dashboard-card">
+            <div class="row gy-3 justify-content-between p-1">
+
+                <div class="col-12">
+                   <span style="color: white;"><i class="fa-solid fa-calendar-check fa-5x"></i></span> 
+                </div>
+
+                <div class="col-12">
+                    <h5 style="color: white;">View appointmentt</h5>
+                </div>
+            </div>
         </div>
 
-        <div class="col-3 bg-secondary">
-            <h1>are</h1>
+        <div onclick="redirectToRegTestResult()"  class="col-5 col-md-3  bg-success dashboard-card">
+            <div class="row gy-3 justify-content-between p-1">
+
+                <div class="col-12">
+                   <span style="color: white;"><i class="fa-solid fa-vial-circle-check fa-5x"></i></span> 
+                </div>
+
+                <div class="col-12">
+                    <h5 style="color: white;">Test report</h5>
+                </div>
+            </div>
         </div>
 
-        <div class="col-4 bg-success">
-            <h1>you</h1>
+        <div onclick="editProfile()"  class="col-5 col-md-3  bg-warning dashboard-card">
+            <div class="row gy-3 justify-content-between p-1">
+
+                <div class="col-12">
+                   <span style="color: white;"><i class="fas fa-edit fa-5x"></i></span> 
+                </div>
+
+                <div class="col-12">
+                    <h5 style="color: white;">Edit profile</h5>
+                </div>
+            </div>
         </div>
+
+
+        <div onclick="changePassword()"  class="col-5 col-md-3  bg-info dashboard-card">
+            <div class="row gy-3 justify-content-between p-1">
+
+                <div class="col-12">
+                   <span style="color: white;"><i class="fa-solid fa-lock fa-5x"></i></span> 
+                </div>
+
+                <div class="col-12">
+                    <h5 style="color: white;">Change password</h5>
+                </div>
+            </div>
+        </div>
+
+        <div onclick="userLogout()"  class="col-5 col-md-3  bg-danger dashboard-card">
+            <div class="row gy-3 justify-content-between p-1">
+
+                <div class="col-12">
+                   <span style="color: white;"><i class="fa fa-sign-out fa-5x"></i></span> 
+                </div>
+
+                <div class="col-12">
+                    <h5 style="color: white;">Logout</h5>
+                </div>
+            </div>
+        </div>
+
    </div>
 {% endif %}
     

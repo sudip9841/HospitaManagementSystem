@@ -299,7 +299,7 @@ class ViewDoctorLists(View):
 class ViewDoctorAppointment(View):
     def get(self,request,id,day):
         if request.user.groups.filter(name__in=['staff']).exists():
-            if id is not None and (day <=7 and day is not None):
+            if id is not None and ((day <=7 and day>=1) and day is not None):
                 try:
                     p_prof = StaffDetails.objects.get(user=request.user)
                 except:
@@ -327,6 +327,27 @@ class ViewDoctorAppointment(View):
         return redirect('/')
 
 
+class ViewDoctorMyAppointment(View):
+    def get(self,request,day):
+        if request.user.groups.filter(name__in=['doctor']).exists():
+            if day <=7 and day is not None:
+                try:
+                    p_prof = DoctorDetails.objects.get(user=request.user)
+                except:
+                    p_prof=""
+                date = datetime.datetime.now() + timedelta(days=day-1)
+                try:
+                    todayAppointment = AppointmentBooking.objects.all().filter(appointmentDate=date,doctor=DoctorDetails.objects.get(user=request.user))
+                except:
+                    return redirect("/")
+
+                d = {'p_prof':p_prof,'todayAppointment':todayAppointment}
+
+                return render(request,'userAuth/viewDoctorMyAppointment.html',d)
+                
+            return redirect('/')
+
+        return redirect('/')
 
 
 

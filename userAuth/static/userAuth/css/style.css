@@ -161,3 +161,13 @@
         z-index: 0;
     }
 } */
+
+
+/* patient dashboard css  */
+
+.dashboard-card{
+    border-radius: 10px;
+    height: 200px;
+    text-align: center;
+    cursor: pointer;
+}

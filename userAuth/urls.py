@@ -44,5 +44,8 @@ urlpatterns = [
     #view doctor profile and see the list of the patients who have appointment with that doctor
     path('viewDoctorAppointment/<int:id>/<int:day>',login_required(views.ViewDoctorAppointment.as_view()),name="viewDoctorAppointment"),
 
+    #view appointment list from doctor dashboard
+    path('viewMyAppDoc/<int:day>',login_required(views.ViewDoctorMyAppointment.as_view()),name="viewMyAppDoc"),
+
 
 ]
