@@ -1,0 +1,84 @@
+{% extends 'userAuth/baseUserDash.html' %}
+{% load static %}
+{% load auth_extras %}
+{% block title%} Patient Profile {% endblock title %}
+
+
+{% block userDashContent %}
+<div class="container">
+
+    {% if request.user|has_group:"doctor" or request.user|has_group:"staff" %}
+
+    {% if patient %}
+    <div class="row gy-5 justify-content-center mt-3">
+
+        <div style="text-align: center;" class="col-lg-4 col-12 border p-5">
+            <img class="img-fluid" src="/media/{{patient.profile_pic}}" alt="patient picture">
+            <h4>{{patient.fullName}}</h4>
+
+        </div>
+
+        <div class="col-lg-8 col-12 doctor-details-container">
+            <div class="experience-education-container p-5">
+                <div class="experience">
+                    <h5>Patient details</h5>
+                    <p> Name: {{patient.fullName}}</p>
+                    <p> Age: {{patient.age}}</p>
+                    <p> Gender: {{patient.gender}}</p>
+                    <p> Phone: {{patient.phone}}</p>
+                    <p>Address: {{patient.address}}</p>
+
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <div class="row mt-3">
+        <div class="col-12">
+            <h4>Patient test reports</h4>
+            <div class="table-responsive">
+                <table class="table table-striped table-light table-hover">
+                    <thead>
+                        <tr>
+                            <th scope="col">#</th>
+                            <th scope="col">Id</th>
+                            <th scope="col">Patient</th>
+                            <th scope="col">Test Name</th>
+                            <th scope="col">Date uploaded</th>
+                            <th scope="col">Test Report</th>
+                            <th scope="col">Actions</th>
+                        </tr>
+                    </thead>
+                    {% if testReports %}
+                    <tbody>
+                        {% for report in testReports %}
+                        <tr>
+                            <th scope="row">{{forloop.counter}}</th>
+                            <td>{{report.id}}</td>
+                            <td>{{report.patient.fullName}}</td>
+                            <td>{{report.testName}}</td>
+                            <td>{{report.testDate}}</td>
+                            <td><a href="/media/{{report.testPic}}">Report{{forloop.counter}}</a> </td>
+                            <!-- <td> {% if app.patient %} <a href="{% url 'patientprofile' app.id %}"><button class="btn btn-sm btn-primary">View profile</button></a> {% endif %}</td> -->
+                            <td>Actions</td>
+                        </tr>
+
+                        {% endfor %}
+                    </tbody>
+                    {% endif %}
+                </table>
+            </div>
+        </div>
+    </div>
+
+    {% else %}
+
+    <h4 style="text-align: center; color: white;" class="bg-danger mt-5 p-3">Sorry ! We did not find any patient</h4>
+
+    {% endif %}
+
+    {% endif %}
+
+</div>
+{% endblock userDashContent %}

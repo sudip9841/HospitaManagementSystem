@@ -17,6 +17,8 @@ class BookAppointmentNonRegPatientView(View):
     
     def get(self,request,id):
         if request.user.groups.filter(name__in=['staff']).exists():
+            # currentTime = datetime.datetime.now()
+            # print("current time",currentTime.hour)
             if id is not None:
                 try:
                     nonRegPatient = NonRegisteredPatientDetails.objects.get(id=id)
@@ -39,6 +41,11 @@ class BookAppointmentNonRegPatientView(View):
     def post(self,request,id):
         id = request.POST.get('id')
         doctorName = request.POST.get('doctorName')
+        appTime = request.POST.get('appointmentTime')
+        print(appTime)
+        currentTime = datetime.datetime.now()
+        print("current time",currentTime.hour)
+
         dObj = DoctorDetails.objects.get(fullName=doctorName)
         form = NonRegPatientAppointmentForm(request.POST)
         if form.is_valid():
@@ -47,7 +54,7 @@ class BookAppointmentNonRegPatientView(View):
             
             dateDiff = date-todatDate
             
-            if(dateDiff.days<1 or dateDiff.days>6):
+            if(dateDiff.days<0 or dateDiff.days>6):
                 messages.error(request,"The appoint date shouldnot be more than 6 days or less than from current date")
                 try:
                     nonRegPatient = NonRegisteredPatientDetails.objects.get(id=id)
@@ -121,7 +128,7 @@ class BookAppointmentRegisteredUser(View):
             
             dateDiff = date-todatDate
             
-            if(dateDiff.days<1 or dateDiff.days>6):
+            if(dateDiff.days<0 or dateDiff.days>6):
                 messages.error(request,"The appoint date shouldnot be more than 6 days or less than from current date")
                 try:
                     p_prof = PatientDetails.objects.get(user=request.user)

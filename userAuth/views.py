@@ -4,7 +4,7 @@ from django.views import View
 from userAuth.forms import  UserRegistrationForm
 from django.contrib import messages
 from userAuth.forms import PatientDetailsForm, DoctorDetailsForm, StaffDetailsForm, NonRegisteredPatientDetailsForm
-from userAuth.models import GENDER_CHOICES, PatientDetails, DoctorDetails, StaffDetails, NonRegisteredPatientDetails
+from userAuth.models import GENDER_CHOICES, PatientDetails, DoctorDetails, StaffDetails, NonRegisteredPatientDetails, TestReport
 from appointment.models import AppointmentBooking
 from django.contrib.auth.decorators import login_required, permission_required
 from django.contrib.auth.models import Group
@@ -310,7 +310,7 @@ class ViewDoctorAppointment(View):
                 # print(tomorrow.day - datetime.datetime.now().day)
                 date = datetime.datetime.now() + timedelta(days=day-1)
                 try:
-                    todayAppointment = AppointmentBooking.objects.all().filter(appointmentDate=date,doctor=DoctorDetails.objects.get(id=id))
+                    todayAppointment = AppointmentBooking.objects.all().filter(appointmentDate=date,doctor=DoctorDetails.objects.get(id=id)).order_by('appointmentTime')
                 except:
                     return redirect("/")
                 if request.user.groups.filter(name__in=['staff']).exists():
@@ -337,7 +337,7 @@ class ViewDoctorMyAppointment(View):
                     p_prof=""
                 date = datetime.datetime.now() + timedelta(days=day-1)
                 try:
-                    todayAppointment = AppointmentBooking.objects.all().filter(appointmentDate=date,doctor=DoctorDetails.objects.get(user=request.user))
+                    todayAppointment = AppointmentBooking.objects.all().filter(appointmentDate=date,doctor=DoctorDetails.objects.get(user=request.user)).order_by('appointmentTime')
                 except:
                     return redirect("/")
 
@@ -348,6 +348,38 @@ class ViewDoctorMyAppointment(View):
             return redirect('/')
 
         return redirect('/')
+
+
+
+class ViewPatientProfile(View):
+    def get(self,request,id):
+      if request.user.groups.filter(name__in=['doctor']).exists() | request.user.groups.filter(name__in=['staff']).exists():
+            try:
+                appontment = AppointmentBooking.objects.get(id=id)
+                patientObj = appontment.patient
+            except:
+                return redirect('/')
+            if request.user.groups.filter(name__in=['doctor']).exists():
+                try:
+                    p_prof = DoctorDetails.objects.get(user=request.user)
+                except:
+                    p_prof=""
+            else:
+                try:
+                    p_prof = StaffDetails.objects.get(user=request.user)
+                except:
+                    p_prof=""
+            
+            try:
+                testReports = TestReport.objects.all().filter(patient=patientObj)
+            except:
+                testReports=""
+           
+            d = {'p_prof':p_prof,'patient':patientObj,'testReports':testReports}
+            return render(request,'userAuth/patientProfile.html',d)
+
+
+      return redirect('/')    
 
 
 

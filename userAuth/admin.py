@@ -1,5 +1,5 @@
 from django.contrib import admin
-from userAuth.models import PatientDetails, DoctorDetails, StaffDetails,NonRegisteredPatientDetails
+from userAuth.models import PatientDetails, DoctorDetails, StaffDetails,NonRegisteredPatientDetails, TestReport
 
 
 @admin.register(PatientDetails)
@@ -20,3 +20,8 @@ class AdminDoctorDetails(admin.ModelAdmin):
 @admin.register(NonRegisteredPatientDetails)
 class AdminNonRegisteredPersonalDetails(admin.ModelAdmin):
     list_display = ['id','fullName','age','gender','phone','address']
+
+
+@admin.register(TestReport)
+class AdminTestReport(admin.ModelAdmin):
+    list_display = ['id','patient','testName','testDate','testPic']
