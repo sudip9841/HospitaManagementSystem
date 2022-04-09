@@ -1,9 +1,10 @@
 
+from django import views
 from django.shortcuts import render, redirect
 from django.views import View
 from userAuth.forms import  UserRegistrationForm
 from django.contrib import messages
-from userAuth.forms import PatientDetailsForm, DoctorDetailsForm, StaffDetailsForm, NonRegisteredPatientDetailsForm
+from userAuth.forms import PatientDetailsForm, DoctorDetailsForm, StaffDetailsForm, NonRegisteredPatientDetailsForm,TestReportForm
 from userAuth.models import GENDER_CHOICES, PatientDetails, DoctorDetails, StaffDetails, NonRegisteredPatientDetails, TestReport
 from appointment.models import AppointmentBooking
 from django.contrib.auth.decorators import login_required, permission_required
@@ -209,6 +210,7 @@ class AddNonRegisterPatientView(View):
 
 class ViewPatientsView(View):
     def get(self,request):
+        
         try:
             p_prof = StaffDetails.objects.get(user=request.user)
         except:
@@ -354,9 +356,9 @@ class ViewDoctorMyAppointment(View):
 class ViewPatientProfile(View):
     def get(self,request,id):
       if request.user.groups.filter(name__in=['doctor']).exists() | request.user.groups.filter(name__in=['staff']).exists():
+            form = TestReportForm()
             try:
-                appontment = AppointmentBooking.objects.get(id=id)
-                patientObj = appontment.patient
+                patientObj = PatientDetails.objects.get(id=id)
             except:
                 return redirect('/')
             if request.user.groups.filter(name__in=['doctor']).exists():
@@ -371,15 +373,78 @@ class ViewPatientProfile(View):
                     p_prof=""
             
             try:
-                testReports = TestReport.objects.all().filter(patient=patientObj)
+                testReports = TestReport.objects.all().filter(patient=patientObj).order_by('-testDate')
             except:
                 testReports=""
            
-            d = {'p_prof':p_prof,'patient':patientObj,'testReports':testReports}
+            d = {'p_prof':p_prof,'patient':patientObj,'testReports':testReports,'form':form}
             return render(request,'userAuth/patientProfile.html',d)
 
 
       return redirect('/')    
+
+    def post(self,request,id):
+        if request.user.groups.filter(name__in=['staff']).exists():
+            form = TestReportForm(request.POST, request.FILES)
+            if form.is_valid():
+                patId = request.POST.get('patientId')
+                patObj = PatientDetails.objects.get(id=patId)
+                form.instance.patient = patObj
+                form.save()
+                return redirect("/accounts/patientProfile/{}".format(id))
+
+        return redirect('/')
+        
+
+
+class ViewAllRegPatients(View):
+    def get(self,request):
+
+        if request.user.groups.filter(name__in=['staff']).exists():
+
+            try:
+                p_prof = StaffDetails.objects.get(user=request.user)
+            except:
+                p_prof=""
+
+            try:
+                nPatientDetails = PatientDetails.objects.all()
+                d = {'nPatientDetails':nPatientDetails}
+            except:
+                pass
+                d ={}
+            d['p_prof'] = p_prof
+            d['sViewRegPatientActive'] = "custom-active"
+            return render(request,'userAuth/viewRegPatients.html',d)
+        
+        return redirect('/')
+
+
+class ViewTestReport(View):
+    def get(self,request):
+
+        if request.user.groups.filter(name__in=['patient']).exists():
+            try:
+                patientObj = PatientDetails.objects.get(user = request.user)
+            except:
+                messages.error(request,"please fillup the user details form before viewing appointments")
+                return redirect('/accounts/editprofile')
+            
+            testReports = TestReport.objects.all().filter(patient=patientObj).order_by('-testDate')
+            try:
+                p_prof = PatientDetails.objects.get(user=request.user)
+            except:
+                p_prof=""
+
+            d = {'p_prof':p_prof,'testReports':testReports}
+
+            return render(request,'userAuth/testresults.html',d)
+
+        
+        return redirect('/')
+
+
+
 
 
 

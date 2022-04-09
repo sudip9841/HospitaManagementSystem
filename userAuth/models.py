@@ -95,7 +95,7 @@ class TestReport(models.Model):
     patient = models.ForeignKey(PatientDetails, on_delete=models.CASCADE,blank=True,null=True)
     testName = models.CharField(max_length=100)
     testDate = models.DateTimeField(auto_now_add=True)
-    testPic = models.ImageField(upload_to='testReport', blank=True, null=True)
+    testPic = models.ImageField(upload_to='testReport')
 
 
 

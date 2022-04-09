@@ -165,8 +165,12 @@ class BookAppointmentRegisteredUser(View):
 
 class MyAppointment(View):
     def get(self,request):
-        pd = PatientDetails.objects.get(user=request.user)
 
+        try:
+            pd = PatientDetails.objects.get(user=request.user)
+        except:
+            messages.error(request,"please fillup the user details form before viewing appointments")
+            return redirect('/accounts/editprofile')
         myAppointments = AppointmentBooking.objects.all().filter(patient=pd)
 
         try:

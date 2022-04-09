@@ -97,9 +97,8 @@
                             <td>{{app.appointmentTime}}</td>
                             <td>{{app.appointmentStatus}}</td>
                             <td>{{app.paymentStatus}}</td>
-                            <td>actions</td>
+                            <td> {% if app.patient %} <a href="{% url 'patientprofile' app.patient.id %}"><button class="btn btn-sm btn-primary">View profile</button></a> {% endif %}</td>
                         </tr>
-
                         {% endfor %}
                     </tbody>
                     {% endif %}

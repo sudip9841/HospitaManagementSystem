@@ -49,4 +49,8 @@ urlpatterns = [
 
     path('patientProfile/<int:id>',login_required(views.ViewPatientProfile.as_view()),name='patientprofile'),
 
+    path('viewRegPatients/',login_required(views.ViewAllRegPatients.as_view()),name="viewregpatients"),
+
+    path('testreports/',login_required(views.ViewTestReport.as_view()),name='testreports')
+
 ]

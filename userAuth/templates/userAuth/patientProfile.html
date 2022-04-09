@@ -18,7 +18,7 @@
 
         </div>
 
-        <div class="col-lg-8 col-12 doctor-details-container">
+        <div class="col-lg-8 col-12 patient-details-container">
             <div class="experience-education-container p-5">
                 <div class="experience">
                     <h5>Patient details</h5>
@@ -30,6 +30,35 @@
 
                 </div>
             </div>
+            {% if request.user|has_group:"staff" %}
+            <div class="experience-education-container">
+                <div class="testreport-form-container">
+                    <h5>Add test report</h5>
+                    <form method="POST" enctype="multipart/form-data" class="p-5">
+                        {% csrf_token %}
+
+                        {% if messages %}
+                        {% for message in messages%}
+                        <div id="edit-patient-message" {% if message.tags %} class="alert alert-danger" role="alert" {%endif %}>
+                            {{message}}
+                        </div>
+                        {% endfor %}
+                        {% endif %}
+
+                        <input type="text" name="patientId" value="{{patient.id}}" hidden>
+
+                        {% for fm in form %}
+                        {{fm.label_tag}} {{fm}} <small class="text-danger">
+                            {{fm.errors}} <br>
+                        </small>
+                        {% endfor %}
+
+                        <button type="submit" class="btn btn-primary mt-3">Add test report</button>
+                    </form>
+
+                </div>
+            </div>
+            {% endif %}
         </div>
 
     </div>

@@ -1,6 +1,6 @@
 from django import forms
 from django.contrib.auth.models import User
-from userAuth.models import PatientDetails, DoctorDetails, StaffDetails, NonRegisteredPatientDetails
+from userAuth.models import PatientDetails, DoctorDetails, StaffDetails, NonRegisteredPatientDetails, TestReport
 from django.contrib.auth.forms import AuthenticationForm, UserCreationForm, UsernameField, PasswordChangeForm, PasswordResetForm, SetPasswordForm
 from django.utils.translation import gettext, gettext_lazy as _
 from django.contrib.auth import password_validation
@@ -119,3 +119,11 @@ class NonRegisteredPatientDetailsForm(forms.ModelForm):
                     'gender':forms.Select(attrs={'class':'form-control'}),
                     'phone':forms.NumberInput(attrs={'class':'form-control'}),
                     'address':forms.TextInput(attrs={'class':'form-control'})}
+
+
+class TestReportForm(forms.ModelForm):
+    class Meta:
+        model = TestReport
+        fields = ['testName','testPic']
+        widgets = {'testName':forms.TextInput(attrs={'class':'form-control'}),
+        'testPic':forms.ClearableFileInput(attrs={'class':'form-control'})}

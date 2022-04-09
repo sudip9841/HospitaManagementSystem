@@ -171,3 +171,9 @@
     text-align: center;
     cursor: pointer;
 }
+
+.testreport-form-container h5{
+    background-color: plum;
+     padding: 5px 0px 5px 0px; 
+     text-align: center; color: white;
+    }

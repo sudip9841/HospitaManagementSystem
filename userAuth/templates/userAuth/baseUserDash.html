@@ -126,7 +126,7 @@
                                 <li><a href="{% url 'userDashHome' %}">Dashboard</a></li>
                                 <li><a href="{% url 'bookreguserappointment'%}">Book appointment</a></li>
                                 <li><a href="{% url 'myappointments' %}">My appointments</a></li>
-                                <li><a href="#">Test report</a></li>
+                                <li><a href="{% url 'testreports' %}">Test report</a></li>
                             </ul>
                             {% elif request.user|has_group:"doctor" %}
                             <ul>
@@ -140,8 +140,8 @@
                                 <!-- id="user-dash-nav-active" -->
                                 <li><a href="{% url 'userDashHome' %}">Dashboard</a></li>
                                 <li><a id="{{sAddPatient}}" href="{% url 'addNonRegUser' %}">Add patient</a></li>
-                                <li><a id="{{sViewPatientActive}}" href="{% url 'viewPatients' %}">Patients List</a>
-                                </li>
+                                <li><a id="{{sViewPatientActive}}" href="{% url 'viewPatients' %}">Non Registered Patients</a></li>
+                                <li><a id="{{sViewRegPatientActive}}" href="{% url 'viewregpatients' %}">Registered Patients</a></li>
                                 <li><a id="{{sViewDoctorActive}}" href="{% url 'viewDoctorsList' %}">Doctors List</a>
                                 </li>
                             </ul>
@@ -244,7 +244,7 @@
 
         function redirectToRegTestResult()
         {
-
+            location.href="/accounts/testreports/"
         }
 
         function editProfile()
@@ -277,6 +277,11 @@
         function viewDoctors()
         {
             location.href = "/accounts/viewDoctorsList"
+        }
+
+        function viewAllRegPatient(){
+
+            location.href = "/accounts/viewRegPatients/"
         }
 
     </script>
