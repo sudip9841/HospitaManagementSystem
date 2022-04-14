@@ -2,6 +2,7 @@
 from django import views
 from django.shortcuts import render, redirect
 from django.views import View
+import appointment
 from userAuth.forms import  UserRegistrationForm
 from django.contrib import messages
 from userAuth.forms import PatientDetailsForm, DoctorDetailsForm, StaffDetailsForm, NonRegisteredPatientDetailsForm,TestReportForm
@@ -444,6 +445,50 @@ class ViewTestReport(View):
         return redirect('/')
 
 
+@login_required
+def deleteReport(request,id,uid):
+    if request.user.groups.filter(name__in=['staff']).exists():
+        if id is not None:
+            try:
+                u = TestReport.objects.get(id=id)
+                u.delete()
+                return redirect('/accounts/patientProfile/{}'.format(uid))
+            except:
+                return redirect('accounts/viewRegPatients')
+        return redirect('/')
+
+    return redirect('/')
+
+
+@login_required
+def clearDue(request,id,dId):
+    if request.user.groups.filter(name__in=['staff']).exists():
+        if id is not None and dId is not None:
+            try:
+                appointment = AppointmentBooking.objects.get(id=id)
+                appointment.paymentStatus='paid'
+                appointment.save()
+                return redirect('/accounts/viewDoctorAppointment/{}/1'.format(dId))
+            except:
+                return redirect('/accounts/viewDoctorAppointment/{}/1'.format(dId))
+
+        return redirect('/accounts/viewDoctorAppointment/{}/1'.format(dId))
+    return redirect('/')
+
+
+@login_required
+def cancelAppointment(request,id,dId):
+    if request.user.groups.filter(name__in=['staff']).exists():
+        if id is not None and dId is not None:
+            try:
+                appointment = AppointmentBooking.objects.get(id=id)
+                appointment.delete()
+                return redirect('/accounts/viewDoctorAppointment/{}/1'.format(dId))
+            except:
+                return redirect('/accounts/viewDoctorAppointment/{}/1'.format(dId))
+
+        return redirect('/accounts/viewDoctorAppointment/{}/1'.format(dId))
+    return redirect('/')
 
 
 

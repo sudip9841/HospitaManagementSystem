@@ -97,7 +97,16 @@
                             <td>{{app.appointmentTime}}</td>
                             <td>{{app.appointmentStatus}}</td>
                             <td>{{app.paymentStatus}}</td>
-                            <td> {% if app.patient %} <a href="{% url 'patientprofile' app.patient.id %}"><button class="btn btn-sm btn-primary">View profile</button></a> {% endif %}</td>
+                            <td class="d-flex gap-3"> {% if app.patient %} <a href="{% url 'patientprofile' app.patient.id %}"><button class="btn btn-sm btn-primary">View profile</button></a> {% endif %}
+                                {% if app.paymentStatus == 'pending' %}
+                                    <button onclick="clearDue('{{app.id}}','{{app.doctor.id}}')" class="btn btn-sm btn-success">clear due</button>
+                                {% else %}
+
+                                <button class="btn btn-sm btn-warning">print invoice</button>
+                                {% endif %}
+                                <button onclick="cancelAppointment('{{app.id}}','{{app.doctor.id}}')" class="btn btn-sm btn-danger">Cancel</button>
+                            </td>
+
                         </tr>
                         {% endfor %}
                     </tbody>
@@ -122,16 +131,27 @@
             tomorrow.setDate(tomorrow.getDate() + i)
             dayList[i].innerHTML = tomorrow.getMonth() + 1 + '-' + tomorrow.getDate()
         }
-//     day1 = document.getElementById('day1')
-//     day2 = document.getElementById('day2')
-//     day3 = document.getElementById('day3')
-//     day4 = document.getElementById('day4')
-//     day5 = document.getElementById('day5')
-//     day6 = document.getElementById('day6')
-//     day7 = document.getElementById('day7')
 
-//     const today = new Date()
-// tomorrow.setDate(tomorrow.getDate() + 1)
+        // for clearing due
+        function clearDue(id,doctorId)
+        {
+            const c = confirm(`Are you sure you want to clear due of appointment having id ${id}`)
+            if(c)
+            {
+                location.href=`/accounts/clearDue/${id}/${doctorId}`
+            }
+        }
+
+        // for canceling appointment 
+        function cancelAppointment(id,doctorId)
+        {
+            const c = confirm(`Are you sure you want to cancel appointment having id ${id}`)
+            if(c)
+            {
+                location.href=`/accounts/cancelappointment/${id}/${doctorId}`
+            }
+        }
+
 
 
     </script>

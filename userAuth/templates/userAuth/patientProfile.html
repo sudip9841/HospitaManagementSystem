@@ -76,7 +76,7 @@
                             <th scope="col">Test Name</th>
                             <th scope="col">Date uploaded</th>
                             <th scope="col">Test Report</th>
-                            <th scope="col">Actions</th>
+                            {% if request.user|has_group:"staff" %}   <th scope="col">Actions</th> {% endif %}
                         </tr>
                     </thead>
                     {% if testReports %}
@@ -90,7 +90,7 @@
                             <td>{{report.testDate}}</td>
                             <td><a href="/media/{{report.testPic}}">Report{{forloop.counter}}</a> </td>
                             <!-- <td> {% if app.patient %} <a href="{% url 'patientprofile' app.id %}"><button class="btn btn-sm btn-primary">View profile</button></a> {% endif %}</td> -->
-                            <td>Actions</td>
+                            {% if request.user|has_group:"staff" %} <td><button onclick="deleteReport('{{report.id}}','{{report.patient.id}}')" class="btn btn-sm btn-danger">Delete report</button></td> {% endif %} 
                         </tr>
 
                         {% endfor %}

@@ -7,5 +7,5 @@ urlpatterns=[
     path('bookreguserappointment',login_required(views.BookAppointmentRegisteredUser.as_view()),name="bookreguserappointment"),
     path('myappointments',login_required(views.MyAppointment.as_view()),name="myappointments"),
     path('deleteuserappointment/<int:id>',views.deleteUserAppointment,name="deleteuserappointment"),
-
+    path('api/verify_payment',views.verify_payment,name='verify_payment')
 ]

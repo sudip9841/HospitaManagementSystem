@@ -133,15 +133,16 @@
                                 <!-- id="user-dash-nav-active" -->
                                 <li><a href="{% url 'userDashHome' %}">Dashboard</a></li>
                                 <li><a href="{% url 'viewMyAppDoc' 1 %}">Appointments</a></li>
-                                <li><a href="#">My patients</a></li>
                             </ul>
                             {% elif request.user|has_group:"staff" %}
                             <ul>
                                 <!-- id="user-dash-nav-active" -->
                                 <li><a href="{% url 'userDashHome' %}">Dashboard</a></li>
                                 <li><a id="{{sAddPatient}}" href="{% url 'addNonRegUser' %}">Add patient</a></li>
-                                <li><a id="{{sViewPatientActive}}" href="{% url 'viewPatients' %}">Non Registered Patients</a></li>
-                                <li><a id="{{sViewRegPatientActive}}" href="{% url 'viewregpatients' %}">Registered Patients</a></li>
+                                <li><a id="{{sViewPatientActive}}" href="{% url 'viewPatients' %}">Non Registered
+                                        Patients</a></li>
+                                <li><a id="{{sViewRegPatientActive}}" href="{% url 'viewregpatients' %}">Registered
+                                        Patients</a></li>
                                 <li><a id="{{sViewDoctorActive}}" href="{% url 'viewDoctorsList' %}">Doctors List</a>
                                 </li>
                             </ul>
@@ -183,8 +184,11 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-ka7Sk0Gln4gmtz2MlQnikT1wXgYsOg+OMhuP+IlRH9sENBO0LRn5q+8nbTov4+1p"
         crossorigin="anonymous"></script>
-
-
+    <script src="https://code.jquery.com/jquery-3.5.1.js"
+        integrity="sha256-QWo7LDvxbWT2tbbQ97B53yJnYU3WhH/C8ycbRAkjPDc=" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
 
 
 
@@ -194,6 +198,21 @@
         // setTimeout(function () {
         //     message_ele.style.display = "none";
         // }, 5000);
+
+
+        function verifyPayment(payload) {
+            $.ajax({
+                url: "{% url 'verify_payment' %}",
+                type: "POST",
+                data: payload,
+                dataType: 'json',
+                success: function (response) {
+                    alert(response)
+                    location.href = '/scheduleAppointment/myappointments'
+                },
+                error: function (error) { alert(error.responseJSON['message']) }
+            });
+        }
 
         var config = {
             // replace the publicKey with yours
@@ -211,7 +230,8 @@
             "eventHandler": {
                 onSuccess(payload) {
                     // hit merchant api for initiating verfication
-                    console.log(payload);
+                    // console.log(payload);
+                    verifyPayment(payload)
                 },
                 onError(error) {
                     console.log(error);
@@ -223,10 +243,14 @@
         };
 
         var checkout = new KhaltiCheckout(config);
-        var btn = document.getElementById("payment-button");
-        btn.onclick = function () {
-            // minimum transaction amount must be 10, i.e 1000 in paisa.
-            checkout.show({ amount: 20000 });
+        try {
+            var btn = document.getElementById("payment-button");
+            btn.onclick = function () {
+                // minimum transaction amount must be 10, i.e 1000 in paisa.
+                checkout.show({ amount: 20000 });
+            }
+        } catch {
+
         }
 
 
@@ -235,53 +259,59 @@
         function redirectToRegBookApp() {
 
             location.href = `/scheduleAppointment/bookreguserappointment`
-            
+
         }
 
-        function redirectToRegViewApp(){
+        function redirectToRegViewApp() {
             location.href = "/scheduleAppointment/myappointments"
         }
 
-        function redirectToRegTestResult()
-        {
-            location.href="/accounts/testreports/"
+        function redirectToRegTestResult() {
+            location.href = "/accounts/testreports/"
         }
 
-        function editProfile()
-        {
+        function editProfile() {
             location.href = "/accounts/editprofile/"
         }
 
-        function changePassword()
-        {
+        function changePassword() {
             location.href = "/accounts/changepassword/"
         }
 
-        function userLogout()
-        {
+        function userLogout() {
             location.href = "/accounts/logout/"
         }
 
         // for staff user functions 
 
-        function addNonRegPatient()
-        {
+        function addNonRegPatient() {
             location.href = "/accounts/addNonRegUser"
         }
 
-        function viewAllNonRegPatient()
-        {
+        function viewAllNonRegPatient() {
             location.href = "/accounts/viewPatients/"
         }
 
-        function viewDoctors()
-        {
+        function viewDoctors() {
             location.href = "/accounts/viewDoctorsList"
         }
 
-        function viewAllRegPatient(){
+        function viewAllRegPatient() {
 
             location.href = "/accounts/viewRegPatients/"
+        }
+
+
+        function deleteReport(id, uid) {
+
+            let c = confirm("Are you sure you want to delete this report ?")
+            if (c) {
+                location.href = `/accounts/deletereport/${id}/${uid}`
+            }
+        }
+
+        function myPatientsAppointmentt() {
+            location.href = "/accounts/viewMyAppDoc/1"
         }
 
     </script>

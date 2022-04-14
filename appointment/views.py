@@ -1,14 +1,18 @@
 
 from django.shortcuts import render, redirect
 from django.views import View
-from graphviz import view
 from userAuth.forms import NonRegisteredPatientDetailsForm
 from userAuth.models import NonRegisteredPatientDetails, StaffDetails, DoctorDetails, PatientDetails
 from appointment.forms import NonRegPatientAppointmentForm, RegPatientAppointmentForm
 from appointment.models import AppointmentBooking
 import datetime
 from django.contrib import messages
+from django.db.models import Q
 
+import requests
+import json 
+from django.http import JsonResponse
+from django.views.decorators.csrf import csrf_exempt
 
 
 
@@ -171,7 +175,10 @@ class MyAppointment(View):
         except:
             messages.error(request,"please fillup the user details form before viewing appointments")
             return redirect('/accounts/editprofile')
-        myAppointments = AppointmentBooking.objects.all().filter(patient=pd)
+            # .filter(appointmentDate__gte=datetime.date.today())
+        myAppointments = AppointmentBooking.objects.all().filter(patient=pd).filter(appointmentDate__gte=datetime.date.today()).order_by('-id')
+
+        myPastAppointments = AppointmentBooking.objects.all().filter(patient=pd).filter(appointmentDate__lte=datetime.date.today()).order_by('-id')
 
         try:
             p_prof = PatientDetails.objects.get(user=request.user)
@@ -179,7 +186,7 @@ class MyAppointment(View):
             p_prof=""
 
         
-        d = {'myAppointments':myAppointments,'p_prof':p_prof}
+        d = {'myAppointments':myAppointments,'p_prof':p_prof,'myPastAppointments':myPastAppointments}
         return render(request,'appointment/myappointments.html',d)
 
 
@@ -199,6 +206,48 @@ def deleteUserAppointment(request,id):
         return redirect('/scheduleAppointment/myappointments')
     
     return redirect('/')
+
+
+# for payment 
+@csrf_exempt
+def verify_payment(request):
+   data = request.POST
+   product_id = data['product_identity']
+   token = data['token']
+   amount = data['amount']
+
+   url = "https://khalti.com/api/v2/payment/verify/"
+   payload = {
+   "token": token,
+   "amount": amount
+   }
+   headers = {
+   "Authorization": "Key test_secret_key_e8bbef30858745a6bb4551514eec92a4"
+   }
+   
+
+   response = requests.post(url, payload, headers = headers)
+   
+   response_data = json.loads(response.text)
+   status_code = str(response.status_code)
+
+   if status_code == '400':
+      response = JsonResponse({'status':'false','message':response_data['detail']}, status=500)
+      return response
+
+   import pprint 
+   pp = pprint.PrettyPrinter(indent=4)
+   pp.pprint(response_data)
+   try:
+    appointment = AppointmentBooking.objects.get(id=55)
+    appointment.paymentStatus = 'paid'
+    appointment.save()
+   except:
+       return redirect('/scheduleAppointment/myappointments')
+
+
+   
+   return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}",safe=False)
 
 
 

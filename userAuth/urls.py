@@ -51,6 +51,10 @@ urlpatterns = [
 
     path('viewRegPatients/',login_required(views.ViewAllRegPatients.as_view()),name="viewregpatients"),
 
-    path('testreports/',login_required(views.ViewTestReport.as_view()),name='testreports')
+    path('testreports/',login_required(views.ViewTestReport.as_view()),name='testreports'),
+    path('deletereport/<int:id>/<int:uid>',views.deleteReport,name="deletereport"),
+
+    path('clearDue/<int:id>/<int:dId>',views.clearDue,name='cleardue'),
+    path('cancelappointment/<int:id>/<int:dId>',views.cancelAppointment,name='cancelappointment')
 
 ]
