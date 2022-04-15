@@ -49,3 +49,11 @@
     padding: 40px;
     margin-top: 30px;
 }
+
+.hospital-image-container{
+    background-image: url('../images/hospital-image.jpg');
+    background-attachment: fixed;
+    background-size:cover;
+    width: 100%;
+    height: 450px;
+}
