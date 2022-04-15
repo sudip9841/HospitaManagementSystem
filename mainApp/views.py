@@ -94,3 +94,9 @@ class PredictDiseases(View):
         messages.success(request,res[0])
         return redirect('/predictdiseases')
 
+
+class AboutView(View):
+    def get(self,request):
+        d = {'aboutactive' : "custom-active"}
+        return render(request,'mainApp/aboutus.html',d)
+
