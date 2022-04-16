@@ -12,8 +12,12 @@ from django.db.models import Q
 
 import requests
 import json 
-from django.http import JsonResponse
+from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.decorators import login_required
+
+import os
+from reportlab.pdfgen import canvas
 
 
 
@@ -245,6 +249,87 @@ def verify_payment(request):
 
    return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}",safe=False)
 
+
+@login_required
+def printInvoice(request):
+    # if request.user.groups.filter(name__in=['staff']).exists():
+        # Create the HttpResponse object with the appropriate PDF headers.
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'filename="invoice.pdf"'
+        
+        save_name = os.path.join(os.path.expanduser("~"), "Downloads/", "invoice.pdf")
+        c = canvas.Canvas(response,pagesize=(200,250),bottomup=0)
+        # Logo Section
+        # Setting th origin to (10,40)
+        c.translate(10,40)
+        # Inverting the scale for getting mirror Image of logo
+        c.scale(1,-1)
+        # Inserting Logo into the Canvas at required position
+        # c.drawImage("hospital_logo.PNG",0,0,width=50,height=20)
+        # Title Section
+        # Again Inverting Scale For strings insertion
+        c.scale(1,-1)
+        # Again Setting the origin back to (0,0) of top-left
+        c.translate(-10,-40)
+        # Setting the font for Name title of company
+        c.setFont("Helvetica-Bold",10)
+        # Inserting the name of the company
+        c.drawCentredString(125,20,"Nepal Hospital Pvt Ltd")
+        # Changing the font size for Specifying Address
+        c.setFont("Helvetica-Bold",5)
+        c.drawCentredString(125,35,"Naxal, Kathmandu")
+        # Changing the font size for Specifying GST Number of firm
+        c.setFont("Helvetica-Bold",6)
+
+        # Line Seprating the page header from the body
+        c.line(5,45,195,45)
+        # Document Information
+        # Changing the font for Document title
+        c.setFont("Courier-Bold",8)
+        c.drawCentredString(100,55,"OPD Payment Invoice")
+
+        # This Block Consist of Costumer Details
+
+        c.setFont("Times-Bold",5)
+        c.drawRightString(-70,70,"Invoice. : 1234")
+        c.drawRightString(70,80,"Date : 2022-2-26")
+        c.drawRightString(70,90,"Patient : Ram Bahadur")
+        c.drawRightString(140,70,"Doctor : Shyam")
+        c.drawRightString(140,80,"Department : Orthopedic")
+        c.drawRightString(70,100,"PHONE No. : 9860500572")
+        # This Block Consist of Item Description
+        c.roundRect(15,108,170,130,10,stroke=1,fill=0)
+        c.line(15,120,185,120)
+        c.drawCentredString(25,118,"SR No.")
+        c.drawCentredString(75,118,"DESCRIPTION")
+        c.drawCentredString(125,118,"Price")
+        c.drawCentredString(173,118,"TOTAL")
+        # Drawing table for Item Description
+        c.line(15,210,185,210)
+        c.line(35,108,35,220)
+        c.line(115,108,115,220)
+        c.line(160,108,160,220)
+        # Declaration and Signature
+        c.line(15,220,185,220)
+        c.line(100,220,100,238)
+
+        c.drawString(20,130,"1")
+        c.drawString(40,130,"OPD Bill Payment")
+        c.drawString(120,130,"200")
+        c.drawString(165,130,"200")
+
+
+
+
+        c.drawString(20,225,"We declare that above mentioned")
+        c.drawString(20,230,"information is true.")
+        c.drawString(20,235,"(This is system generated invoive)")
+        c.drawRightString(180,235,"Authorised by Nepal Hospital")
+        # End the Page and Start with new
+        c.showPage()
+        # Saving the PDF
+        c.save()
+        return response
 
 
 
