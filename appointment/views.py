@@ -1,4 +1,5 @@
 
+from importlib.metadata import PathDistribution
 from django.shortcuts import render, redirect
 from django.views import View
 from userAuth.forms import NonRegisteredPatientDetailsForm
@@ -176,9 +177,10 @@ class MyAppointment(View):
             messages.error(request,"please fillup the user details form before viewing appointments")
             return redirect('/accounts/editprofile')
             # .filter(appointmentDate__gte=datetime.date.today())
-        myAppointments = AppointmentBooking.objects.all().filter(patient=pd).filter(appointmentDate__gte=datetime.date.today()).order_by('-id')
+        myAppointments = AppointmentBooking.objects.all().filter(patient=pd).filter(appointmentDate__gte=datetime.date.today()).filter(paymentStatus='pending').order_by('-id')
 
         myPastAppointments = AppointmentBooking.objects.all().filter(patient=pd).filter(appointmentDate__lte=datetime.date.today()).order_by('-id')
+        myPaidAppointments = AppointmentBooking.objects.all().filter(patient=pd).filter(appointmentDate__gte=datetime.date.today()).filter(paymentStatus='paid').order_by('-id')
 
         try:
             p_prof = PatientDetails.objects.get(user=request.user)
@@ -186,7 +188,7 @@ class MyAppointment(View):
             p_prof=""
 
         
-        d = {'myAppointments':myAppointments,'p_prof':p_prof,'myPastAppointments':myPastAppointments}
+        d = {'myAppointments':myAppointments,'p_prof':p_prof,'myPastAppointments':myPastAppointments,'myPaidAppointments':myPaidAppointments}
         return render(request,'appointment/myappointments.html',d)
 
 
@@ -238,15 +240,9 @@ def verify_payment(request):
    import pprint 
    pp = pprint.PrettyPrinter(indent=4)
    pp.pprint(response_data)
-   try:
-    appointment = AppointmentBooking.objects.get(id=55)
-    appointment.paymentStatus = 'paid'
-    appointment.save()
-   except:
-       return redirect('/scheduleAppointment/myappointments')
+   pd = PatientDetails.objects.get(user=request.user)
+   AppointmentBooking.objects.all().filter(patient=pd).filter(paymentStatus='pending').update(paymentStatus='paid')
 
-
-   
    return JsonResponse(f"Payment Done !! With IDX. {response_data['user']['idx']}",safe=False)
 
 

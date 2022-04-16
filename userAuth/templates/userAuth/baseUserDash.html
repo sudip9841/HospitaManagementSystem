@@ -210,7 +210,7 @@
                     alert(response)
                     location.href = '/scheduleAppointment/myappointments'
                 },
-                error: function (error) { alert(error.responseJSON['message']) }
+                error: function (error) { alert("error couldn't make payment rightnow") }
             });
         }
 
