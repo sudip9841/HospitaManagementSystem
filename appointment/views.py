@@ -251,13 +251,30 @@ def verify_payment(request):
 
 
 @login_required
-def printInvoice(request):
-    # if request.user.groups.filter(name__in=['staff']).exists():
+def printInvoice(request,id):
+    if request.user.groups.filter(name__in=['patient']).exists():
+        try:
+            app = AppointmentBooking.objects.get(id=id)
+        except:
+            return redirect('/scheduleAppointment/myappointments')
+        if app.patient.user == request.user and app.paymentStatus=='paid':
+            d={
+                'appointmentId':app.id,
+                'doctorName':app.doctor.fullName,
+                'appointmentDate':app.appointmentDate,
+                'appointmentTime':app.appointmentTime,
+                'patientName':app.patient.fullName,
+                'doctorDepartment':app.doctor.department,
+                'phone':app.patient.phone
+            }
+        else:
+            return redirect('/scheduleAppointment/myappointments')
+
         # Create the HttpResponse object with the appropriate PDF headers.
         response = HttpResponse(content_type='application/pdf')
         response['Content-Disposition'] = 'filename="invoice.pdf"'
         
-        save_name = os.path.join(os.path.expanduser("~"), "Downloads/", "invoice.pdf")
+        # save_name = os.path.join(os.path.expanduser("~"), "Downloads/", "invoice.pdf")
         c = canvas.Canvas(response,pagesize=(200,250),bottomup=0)
         # Logo Section
         # Setting th origin to (10,40)
@@ -274,10 +291,10 @@ def printInvoice(request):
         # Setting the font for Name title of company
         c.setFont("Helvetica-Bold",10)
         # Inserting the name of the company
-        c.drawCentredString(125,20,"Nepal Hospital Pvt Ltd")
+        c.drawCentredString(100,20,"Nepal Hospital Pvt Ltd")
         # Changing the font size for Specifying Address
         c.setFont("Helvetica-Bold",5)
-        c.drawCentredString(125,35,"Naxal, Kathmandu")
+        c.drawCentredString(100,35,"Naxal, Kathmandu")
         # Changing the font size for Specifying GST Number of firm
         c.setFont("Helvetica-Bold",6)
 
@@ -291,12 +308,12 @@ def printInvoice(request):
         # This Block Consist of Costumer Details
 
         c.setFont("Times-Bold",5)
-        c.drawRightString(-70,70,"Invoice. : 1234")
-        c.drawRightString(70,80,"Date : 2022-2-26")
-        c.drawRightString(70,90,"Patient : Ram Bahadur")
-        c.drawRightString(140,70,"Doctor : Shyam")
-        c.drawRightString(140,80,"Department : Orthopedic")
-        c.drawRightString(70,100,"PHONE No. : 9860500572")
+        c.drawRightString(45,70,"Invoice. : {}".format(d['appointmentId']))
+        c.drawRightString(76,80,"Date, Time : {},{}".format(d['appointmentDate'],d['appointmentTime']))
+        c.drawRightString(70,90,"Patient : {}".format(d['patientName']))
+        c.drawRightString(160,70,"Doctor : {}".format(d['doctorName']))
+        c.drawRightString(160,80,"Department : {}".format(d['doctorDepartment'][:15]))
+        c.drawRightString(70,100,"Phone No. : {}".format(d['phone']))
         # This Block Consist of Item Description
         c.roundRect(15,108,170,130,10,stroke=1,fill=0)
         c.line(15,120,185,120)
@@ -324,12 +341,124 @@ def printInvoice(request):
         c.drawString(20,225,"We declare that above mentioned")
         c.drawString(20,230,"information is true.")
         c.drawString(20,235,"(This is system generated invoive)")
+        c.drawRightString(165,227,"Payment Status: Paid")
         c.drawRightString(180,235,"Authorised by Nepal Hospital")
         # End the Page and Start with new
         c.showPage()
         # Saving the PDF
         c.save()
         return response
+
+    # printing invoice logic for staff
+    elif request.user.groups.filter(name__in=['staff']).exists():
+        try:
+            app = AppointmentBooking.objects.get(id=id)
+        except:
+            return redirect('/accounts/viewDoctorsList')
+        if app.paymentStatus=='paid':
+            if app.patient:
+                d={
+                    'appointmentId':app.id,
+                    'doctorName':app.doctor.fullName,
+                    'appointmentDate':app.appointmentDate,
+                    'appointmentTime':app.appointmentTime,
+                    'patientName':app.patient.fullName,
+                    'doctorDepartment':app.doctor.department,
+                    'phone':app.patient.phone
+                }
+            else:
+                d={
+                    'appointmentId':app.id,
+                    'doctorName':app.doctor.fullName,
+                    'appointmentDate':app.appointmentDate,
+                    'appointmentTime':app.appointmentTime,
+                    'patientName':app.nonRegisteredPatient.fullName,
+                    'doctorDepartment':app.doctor.department,
+                    'phone':app.nonRegisteredPatient.phone
+                }
+        else:
+            return redirect('/accounts/viewDoctorsList')
+
+        # Create the HttpResponse object with the appropriate PDF headers.
+        response = HttpResponse(content_type='application/pdf')
+        response['Content-Disposition'] = 'filename="invoice.pdf"'
+        
+        # save_name = os.path.join(os.path.expanduser("~"), "Downloads/", "invoice.pdf")
+        c = canvas.Canvas(response,pagesize=(200,250),bottomup=0)
+        # Logo Section
+        # Setting th origin to (10,40)
+        c.translate(10,40)
+        # Inverting the scale for getting mirror Image of logo
+        c.scale(1,-1)
+        # Inserting Logo into the Canvas at required position
+        # c.drawImage("hospital_logo.PNG",0,0,width=50,height=20)
+        # Title Section
+        # Again Inverting Scale For strings insertion
+        c.scale(1,-1)
+        # Again Setting the origin back to (0,0) of top-left
+        c.translate(-10,-40)
+        # Setting the font for Name title of company
+        c.setFont("Helvetica-Bold",10)
+        # Inserting the name of the company
+        c.drawCentredString(100,20,"Nepal Hospital Pvt Ltd")
+        # Changing the font size for Specifying Address
+        c.setFont("Helvetica-Bold",5)
+        c.drawCentredString(100,35,"Naxal, Kathmandu")
+        # Changing the font size for Specifying GST Number of firm
+        c.setFont("Helvetica-Bold",6)
+
+        # Line Seprating the page header from the body
+        c.line(5,45,195,45)
+        # Document Information
+        # Changing the font for Document title
+        c.setFont("Courier-Bold",8)
+        c.drawCentredString(100,55,"OPD Payment Invoice")
+
+        # This Block Consist of Costumer Details
+
+        c.setFont("Times-Bold",5)
+        c.drawRightString(45,70,"Invoice. : {}".format(d['appointmentId']))
+        c.drawRightString(76,80,"Date, Time : {},{}".format(d['appointmentDate'],d['appointmentTime']))
+        c.drawRightString(70,90,"Patient : {}".format(d['patientName']))
+        c.drawRightString(160,70,"Doctor : {}".format(d['doctorName']))
+        c.drawRightString(160,80,"Department : {}".format(d['doctorDepartment'][:15]))
+        c.drawRightString(70,100,"Phone No. : {}".format(d['phone']))
+        # This Block Consist of Item Description
+        c.roundRect(15,108,170,130,10,stroke=1,fill=0)
+        c.line(15,120,185,120)
+        c.drawCentredString(25,118,"SR No.")
+        c.drawCentredString(75,118,"DESCRIPTION")
+        c.drawCentredString(125,118,"Price")
+        c.drawCentredString(173,118,"TOTAL")
+        # Drawing table for Item Description
+        c.line(15,210,185,210)
+        c.line(35,108,35,220)
+        c.line(115,108,115,220)
+        c.line(160,108,160,220)
+        # Declaration and Signature
+        c.line(15,220,185,220)
+        c.line(100,220,100,238)
+
+        c.drawString(20,130,"1")
+        c.drawString(40,130,"OPD Bill Payment")
+        c.drawString(120,130,"200")
+        c.drawString(165,130,"200")
+
+
+
+
+        c.drawString(20,225,"We declare that above mentioned")
+        c.drawString(20,230,"information is true.")
+        c.drawString(20,235,"(This is system generated invoive)")
+        c.drawRightString(165,227,"Payment Status: Paid")
+        c.drawRightString(180,235,"Authorised by Nepal Hospital")
+        # End the Page and Start with new
+        c.showPage()
+        # Saving the PDF
+        c.save()
+        return response
+    else:
+        return redirect('/')
 
 
 

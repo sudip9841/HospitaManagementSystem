@@ -8,5 +8,5 @@ urlpatterns=[
     path('myappointments',login_required(views.MyAppointment.as_view()),name="myappointments"),
     path('deleteuserappointment/<int:id>',views.deleteUserAppointment,name="deleteuserappointment"),
     path('api/verify_payment',views.verify_payment,name='verify_payment'),
-    path('printinvoice/',views.printInvoice,name='printinvoice')
+    path('printinvoice/<int:id>',views.printInvoice,name='printinvoice')
 ]
