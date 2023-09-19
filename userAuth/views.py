@@ -13,7 +13,6 @@ from django.contrib.auth.models import Group
 import datetime
 from datetime import timedelta
 from django.utils import timezone
-from reportlab.pdfgen import canvas
 
 # Create your views here.
 

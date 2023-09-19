@@ -1,5 +1,3 @@
-
-from importlib.metadata import PathDistribution
 from django.shortcuts import render, redirect
 from django.views import View
 from userAuth.forms import NonRegisteredPatientDetailsForm
@@ -15,9 +13,7 @@ import json
 from django.http import HttpResponse, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth.decorators import login_required
-
-import os
-from reportlab.pdfgen import canvas
+import canvas
 
 
 
